@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Hacker Fab</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'data_management.css' %}">
+</head>
+<body>
+    <div class = "message" id="message"> {{ message }} </div>
+    <form name="form1" id="form1" action="/input" method="POST">
+        <select name="Process" id="process" name="new_process">
+          <option value="" selected="selected">Select Process</option>
+          {% for process in processes %}
+            <option value="{{process.id}}">{{process.name}}</option>
+          {% endfor %}
+        </select>
+        <input type="submit" value="Submit">
+        {% csrf_token %}
+    </form>
+    <div id="matrix">
+        {% for cell in matrix %}
+            <div class="{{cell.id}}" id="{{cell.id}}"> {{cell.name}} </div>
+            <select name="{{cell.id}}" id="{{cell.id}}" name="{{cell.name}}-options">
+                <option value="" selected="selected">Select Value</option>
+                {% for val in cell.values %}
+                  <option value="{{val.id}}">{{val.name}}</option>
+                {% endfor %}
+            </select>
+        {% endfor %}
+    </div>
+</body>
+</html>

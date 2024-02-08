@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Hacker Fab</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'data_management.css' %}">
+</head>
+<body>
+    <div class = "message" id="message"> {{ message }} </div>
+    <div class="flex-container">
+        <form class="input_data" action="/input" method="POST">
+            <button id="input_data">Input Data</button>
+        {% csrf_token %}
+        </form>
+        <form class="search_data" action="/search" method="POST">
+            <button id="search_data">Search Data</button>
+        {% csrf_token %}
+        </form>
+    </div>
+</body>
+</html>
