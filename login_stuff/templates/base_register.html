@@ -1,0 +1,51 @@
+<!doctype html>
+<html>
+	<head>
+        <div class="header" id="id_header_div">
+            <meta charset="utf-8">
+            {% load static %}
+            <link href="{% static 'base.css' %}" rel="stylesheet" type="text/css">
+            <div class="big-heading" id="id_site_name">
+                Blog Master
+            </div>
+            <a href="{% url 'mypfp' %}" id="id_nav_profile">
+                <button>Name</button>
+            </a>
+            <a href="{% url 'global' %}" id="id_nav_global_stream">
+                <button>Global</button>
+            </a>
+            <a href="{% url 'follower' %}" id="id_nav_follower_stream">
+                <button>Follower</button>
+            </a>
+            <a href="{% url 'logout' %}" id="id_nav_logout">
+                <button>Logout</button>
+            </a>
+			<a id="id_login_link" href="{% url 'login' %}">
+				<button>Login</button>
+			</a>
+        </div>
+	</head>
+
+	<body>
+	    <div class="user-info">
+			{% block user-info %}
+			{% endblock %}
+	    </div>
+
+	    <div class="search-bar">
+			{% block search-bar %}
+			{% endblock %}
+		</div>
+
+	    {% if message %}
+	        <div class="message">
+	            {{message}}
+	        </div>
+	    {% endif %}
+
+	    <div class="content">
+		    {% block content %}
+		    {% endblock %}
+		</div>
+	</body>
+</html>
