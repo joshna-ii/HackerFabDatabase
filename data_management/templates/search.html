@@ -26,7 +26,7 @@
     <div id="matrix">
         <form name="form2" id="form2" action="/search" method="POST">
           {% for cell in matrix %}
-            <div class="{{cell.id}}" id="{{cell.id}}"> {{cell.name}} </div>
+            <div class="{{cell.id}}" id="{{cell.id}}"><p><dfn title="insert explanation here">{{cell.name}}</dfn></p></div>
             <input id="value_text" type=text name=name><br>
           {% endfor %}
           {% if matrix %}
