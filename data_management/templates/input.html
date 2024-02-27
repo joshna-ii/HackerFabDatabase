@@ -9,6 +9,9 @@
     <link rel="stylesheet" href="{% static 'data_management.css' %}">
 </head>
 <body>
+    <a href="{% url 'chip' %}" id="id_nav_global_stream">
+      <button>Create/Edit Chip</button>
+    </a>
     <form name="form1" id="form1" action="/input" method="POST">
         <select name="Process" id="process" name="new_process">
           <option value="" selected="selected">Select Process</option>

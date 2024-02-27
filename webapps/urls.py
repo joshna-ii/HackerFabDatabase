@@ -27,4 +27,5 @@ urlpatterns = [
     path('main', views.start_page, name="main"),
     path('input', views.input_page, name="input"),
     path('search', views.search_page, name="search"),
+    path('chip', views.chip_page, name="chip"),
 ]

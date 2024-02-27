@@ -2,7 +2,7 @@ from django import forms
 
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
-from data_management.models import AluminumEtch, AluminumEvaporation, ChipList, Deposition, OxideEtch, Patterning, PlasmaClean, PlasmaEtch
+from data_management.models import AluminumEtch, AluminumEvaporation, ChipList, Deposition, ChipListSearch, OxideEtch, Patterning, PlasmaClean, PlasmaEtch
 
 class AluminumEtchSearchForm(forms.ModelForm):
     class Meta:
@@ -30,7 +30,7 @@ class AluminumEvaporationSearchForm(forms.ModelForm):
 
 class ChipListSearchForm(forms.ModelForm):
     class Meta:
-        model = ChipList
+        model = ChipListSearch
         exclude = ()
         labels = {
         }
@@ -114,7 +114,11 @@ class AluminumEvaporationInputForm(forms.ModelForm):
 class ChipListForm(forms.ModelForm):
     class Meta:
         model = ChipList
-        exclude = ()
+        exclude = (
+            'chip_owner',
+            'chip_number',
+            'creation_time',
+        )
 
 class DepositionInputForm(forms.ModelForm):
     class Meta:

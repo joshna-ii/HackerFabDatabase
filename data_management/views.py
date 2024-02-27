@@ -13,7 +13,7 @@ from django.contrib.auth import authenticate, login, logout
 
 from django.utils import timezone
 
-from data_management.forms import LoginForm, RegisterForm, AluminumEtchInputForm, AluminumEvaporationInputForm, ChipListForm, DepositionInputForm, OxideEtchInputForm, PatterningInputForm, PlasmaCleanInputForm, PlasmaEtchInputForm
+from data_management.forms import LoginForm, RegisterForm, ChipListSearchForm, AluminumEtchInputForm, AluminumEvaporationInputForm, ChipListForm, DepositionInputForm, OxideEtchInputForm, PatterningInputForm, PlasmaCleanInputForm, PlasmaEtchInputForm
 from data_management.models import AluminumEtch, AluminumEvaporation, ChipList, Deposition, OxideEtch, Patterning, PlasmaClean, PlasmaEtch
 from data_management.forms import AluminumEtchSearchForm, AluminumEvaporationSearchForm, DepositionSearchForm, OxideEtchSearchForm, PatterningSearchForm, PlasmaCleanSearchForm, PlasmaEtchSearchForm
 
@@ -50,20 +50,22 @@ def get_input_meas(processes):
 def get_search_meas(processes):
     forms = []
     for process in processes:
-        if process == "Aluminum Etch":
+        if process == "AluminumEtch":
             form = AluminumEtchSearchForm()
-        if process == "Aluminum Evaporation":
+        if process == "AluminumEvaporation":
             form = AluminumEvaporationSearchForm()
         if process == "Deposition":
             form = DepositionSearchForm()
-        if process == "Oxide Etch":
+        if process == "OxideEtch":
             form = OxideEtchSearchForm()
         if process == "Patterning":
             form = PatterningSearchForm()
-        if process == "Plasma Clean":
+        if process == "PlasmaClean":
             form = PlasmaCleanSearchForm()
-        if process == "Plasma Etch":
+        if process == "PlasmaEtch":
             form = PlasmaEtchSearchForm()
+        if process == "ChipList":
+            form = ChipListSearchForm()
         f = {"name": f'{process}', "form": form}
         forms.append(f)
     return forms
@@ -75,7 +77,7 @@ def save_form(processes, request):
             if not form.is_valid():
                 return ["Invalid", form]
             new_model = AluminumEtch(
-                chip_number=request.POST['chip_number'], 
+                chip_number = ChipList.objects.get(chip_number=request.POST["chip_number"]),
                 AluminumEtch_temp=request.POST['AluminumEtch_temp'], 
                 AluminumEtch_time=request.POST['AluminumEtch_time'], 
                 AluminumEtch_stir_rpm=request.POST['AluminumEtch_stir_rpm'], 
@@ -92,7 +94,7 @@ def save_form(processes, request):
             if not form.is_valid():
                 return ["Invalid", form]
             new_model = AluminumEvaporation(
-                chip_number=request.POST['chip_number'], 
+                chip_number = ChipList.objects.get(chip_number=request.POST["chip_number"]),
                 AluminumEvaporation_temp=request.POST['AluminumEvaporation_temp'], 
                 AluminumEvaporation_time=request.POST['AluminumEvaporation_time'], 
                 AluminumEvaporation_pressure_before_start_seq=request.POST['AluminumEvaporation_pressure_before_start_seq'], 
@@ -110,7 +112,7 @@ def save_form(processes, request):
             if not form.is_valid():
                 return ["Invalid", form]
             new_model = Deposition(
-                chip_number=request.POST['chip_number'], 
+                chip_number = ChipList.objects.get(chip_number=request.POST["chip_number"]),
                 Deposition_glass_type=request.POST['Deposition_glass_type'], 
                 Deposition_cleaning_step=request.POST['Deposition_cleaning_step'], 
                 Deposition_days_glass_at_room_temp=request.POST['Deposition_days_glass_at_room_temp'], 
@@ -135,7 +137,7 @@ def save_form(processes, request):
             if not form.is_valid():
                 return ["Invalid", form]
             new_model = OxideEtch(
-                chip_number=request.POST['chip_number'], 
+                chip_number = ChipList.objects.get(chip_number=request.POST["chip_number"]),
                 OxideEtch_max_temp_glass_reached=request.POST['OxideEtch_max_temp_glass_reached'], 
                 OxideEtch_time=request.POST['OxideEtch_time'], 
                 OxideEtch_temp=request.POST['OxideEtch_temp'], 
@@ -149,7 +151,7 @@ def save_form(processes, request):
             if not form.is_valid():
                 return ["Invalid", form]
             new_model = Patterning(
-                chip_number=request.POST['chip_number'], 
+                chip_number = ChipList.objects.get(chip_number=request.POST["chip_number"]),
                 Patterning_underlying_material=request.POST['Patterning_underlying_material'], 
                 Patterning_hdms_prebake_temp=request.POST['Patterning_hdms_prebake_temp'], 
                 Patterning_hdms_prebake_time=request.POST['Patterning_hdms_prebake_time'], 
@@ -178,7 +180,7 @@ def save_form(processes, request):
             if not form.is_valid():
                 return ["Invalid", form]
             new_model = PlasmaClean(
-                chip_number=request.POST['chip_number'], 
+                chip_number = ChipList.objects.get(chip_number=request.POST["chip_number"]),
                 PlasmaClean_o2_flow=request.POST['PlasmaClean_o2_flow'], 
                 PlasmaClean_rf_power=request.POST['PlasmaClean_rf_power'], 
                 PlasmaClean_clean_time=request.POST['PlasmaClean_clean_time'], 
@@ -193,7 +195,7 @@ def save_form(processes, request):
             if not form.is_valid():
                 return ["Invalid", form]
             new_model = PlasmaEtch(
-                chip_number=request.POST['chip_number'], 
+                chip_number = ChipList.objects.get(chip_number=request.POST["chip_number"]),
                 PlasmaEtch_o2_flow=request.POST['o2_flow'], 
                 PlasmaEtch_sf6_flow=request.POST['sf6_flow'], 
                 PlasmaEtch_rf_power=request.POST['rf_power'], 
@@ -209,15 +211,27 @@ def save_form(processes, request):
 def parse_forms(used_processes, request):
     invalid_form = False
     forms = []
-    filters = []
+    filters = {}
+    used_processes = used_processes.split(",")
     for process in used_processes:
-        if process == "Aluminum Etch":
+        process = re.sub("[^A-Za-z]","",process)
+        if process == "ChipList":
+            form = ChipListSearchForm(request.POST, request.FILES)
+            if not form.is_valid():
+                invalid_form = True
+            if invalid_form:
+                forms.append(form)
+            cleaned_data = form.cleaned_data
+            for key, value in cleaned_data.items():
+                if value != None:
+                    filters[key] = value
+        if process == "AluminumEtch":
             form = AluminumEtchSearchForm(request.POST, request.FILES)
             if not form.is_valid():
                 invalid_form = True
             if invalid_form:
                 forms.append(form)
-        if process == "Aluminum Evaporation":
+        if process == "AluminumEvaporation":
             form = AluminumEvaporationSearchForm(request.POST, request.FILES)
             if not form.is_valid():
                 invalid_form = True
@@ -229,7 +243,7 @@ def parse_forms(used_processes, request):
                 invalid_form = True
             if invalid_form:
                 forms.append(form)
-        if process == "Oxide Etch":
+        if process == "OxideEtch":
             form = OxideEtchSearchForm(request.POST, request.FILES)
             if not form.is_valid():
                 return ["Invalid", form]
@@ -239,13 +253,13 @@ def parse_forms(used_processes, request):
                 invalid_form = True
             if invalid_form:
                 forms.append(form)
-        if process == "Plasma Clean":
+        if process == "PlasmaClean":
             form = PlasmaCleanSearchForm(request.POST, request.FILES)
             if not form.is_valid():
                 invalid_form = True
             if invalid_form:
                 forms.append(form)
-        if process == "Plasma Etch":
+        if process == "PlasmaEtch":
             form = PlasmaEtchSearchForm(request.POST, request.FILES)
             if not form.is_valid():
                 invalid_form = True
@@ -253,7 +267,8 @@ def parse_forms(used_processes, request):
                 forms.append(form)
     if invalid_form:
         return ["Invalid", forms]
-    return "Done"
+    print(filters)
+    return [filters]
 
 # def filter_form(input_dict):
 #     for input_dict.keys():
@@ -263,6 +278,40 @@ def parse_forms(used_processes, request):
 def start_page(request):
     context = {"message": "Welcome to the Hacker Fab Database"}
     return render(request, "home.html", context)
+
+@login_required
+def chip_page(request):
+    context = {}
+    if request.method == 'GET':
+        return render(request, "chip.html", context)
+    
+    context["chip_acquired"] = "yes"
+    try:
+        chip = ChipList.objects.get(chip_number=request.POST["chip_number"]) 
+    except:
+        chip = ChipList(chip_number=request.POST["chip_number"], creation_time=timezone.now(), chip_owner=request.user)
+        chip.save()
+
+    status = request.POST["status"]
+    if status == "Initial":
+        context['creation_time'] = chip.creation_time
+        context['chip_owner'] = chip.chip_owner
+        context['chip_number'] = chip.chip_number
+        context['form'] = ChipListForm(initial={'notes': chip.notes})
+        return render(request, 'chip.html', context)
+    
+    form = ChipListForm(request.POST, request.FILES)
+    if not form.is_valid():
+        context = {'form': form}
+        return render(request, 'chip.html', context)
+    
+    chip.notes = form.cleaned_data['notes']
+    chip.save()
+    context['creation_time'] = chip.creation_time
+    context['chip_owner'] = chip.chip_owner
+    context['chip_number'] = chip.chip_number
+    context['form'] = ChipListForm(initial={'notes': chip.notes})
+    return render(request, "chip.html", context)
 
 @login_required
 def search_page(request):
@@ -317,6 +366,8 @@ def process_search(request):
     for key, value in request.lists():
         if key != "status":
             k = key[1:]
+            if " " in k:
+                k = k.split(" ")[0] + k.split(" ")[1]
             rel_processes.append(k)
     rel_processes = rel_processes[:-1]
     return rel_processes
