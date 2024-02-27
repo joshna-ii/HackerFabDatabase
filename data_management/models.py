@@ -10,9 +10,9 @@ from django.contrib.auth.models import User
 
 
 class AluminumEtch(models.Model):
-    chip_number = models.IntegerField()
-    chip_owner    = models.ForeignKey(User, on_delete=models.PROTECT)
-    creation_time = models.DateTimeField()
+    chip_number = models.IntegerField(blank=True)
+    chip_owner    = models.ForeignKey(User, on_delete=models.PROTECT, blank=True)
+    creation_time = models.DateTimeField(blank=True)
     alum_etch_temp = models.CharField(max_length=400, blank=True, null=True)
     alum_etch_time = models.CharField(max_length=400, blank=True, null=True)
     stir_rpm = models.CharField(max_length=400, blank=True, null=True)
@@ -24,9 +24,9 @@ class AluminumEtch(models.Model):
 
 
 class AluminumEvaporation(models.Model):
-    chip_number = models.IntegerField()
-    chip_owner    = models.ForeignKey(User, on_delete=models.PROTECT)
-    creation_time = models.DateTimeField()
+    chip_number = models.IntegerField(blank=True)
+    chip_owner    = models.ForeignKey(User, on_delete=models.PROTECT, blank=True)
+    creation_time = models.DateTimeField(blank=True)
     aluminum_evaporation_temp = models.CharField(max_length=400, blank=True, null=True)  # This field type is a guess.
     aluminum_evaporation_time = models.CharField(max_length=400, blank=True, null=True)  # This field type is a guess.
     pressure_before_start_seq = models.CharField(max_length=400, blank=True, null=True)  # This field type is a guess.
@@ -38,14 +38,14 @@ class AluminumEvaporation(models.Model):
     notes = models.CharField(max_length=400, blank=True, null=True)  # This field type is a guess.
 
 class ChipList(models.Model):
-    chip_number = models.IntegerField()
-    chip_owner    = models.ForeignKey(User, on_delete=models.PROTECT)
-    creation_time = models.DateTimeField()
+    chip_number = models.IntegerField(blank=True)
+    chip_owner    = models.ForeignKey(User, on_delete=models.PROTECT, blank=True)
+    creation_time = models.DateTimeField(blank=True)
     notes = models.CharField(max_length=400, blank=True, null=True)  # This field type is a guess.
 class DepositionTemplate(models.Model):
-    chip_number = models.IntegerField()
-    chip_owner    = models.ForeignKey(User, on_delete=models.PROTECT)
-    creation_time = models.DateTimeField()
+    chip_number = models.IntegerField(blank=True)
+    chip_owner    = models.ForeignKey(User, on_delete=models.PROTECT, blank=True)
+    creation_time = models.DateTimeField(blank=True)
     glass_type = models.CharField(max_length=400, blank=True, null=True)
     cleaning_step = models.CharField(max_length=400, blank=True, null=True)  # This field type is a guess.
     days_glass_at_room_temp = models.CharField(max_length=400, blank=True, null=True)
@@ -64,9 +64,9 @@ class DepositionTemplate(models.Model):
     notes = models.CharField(max_length=400, blank=True, null=True)  # This field type is a guess.
 
 class OxideEtch(models.Model):
-    chip_number = models.IntegerField()
-    chip_owner    = models.ForeignKey(User, on_delete=models.PROTECT)
-    creation_time = models.DateTimeField()
+    chip_number = models.IntegerField(blank=True)
+    chip_owner    = models.ForeignKey(User, on_delete=models.PROTECT, blank=True)
+    creation_time = models.DateTimeField(blank=True)
     max_temp_glass_reached = models.CharField(max_length=400, blank=True, null=True)
     oxide_etch_time = models.CharField(max_length=400, blank=True, null=True)
     oxide_etch_temp = models.CharField(max_length=400, blank=True, null=True)
@@ -75,9 +75,9 @@ class OxideEtch(models.Model):
     notes = models.CharField(max_length=400, blank=True, null=True)  # This field type is a guess.
 
 class Patterning(models.Model):
-    chip_number = models.IntegerField()
-    chip_owner    = models.ForeignKey(User, on_delete=models.PROTECT)
-    creation_time = models.DateTimeField()
+    chip_number = models.IntegerField(blank=True)
+    chip_owner    = models.ForeignKey(User, on_delete=models.PROTECT, blank=True)
+    creation_time = models.DateTimeField(blank=True)
     underlying_material = models.CharField(max_length=400, blank=True, null=True)  # This field type is a guess.
     hdms_prebake_temp = models.CharField(max_length=400, blank=True, null=True)
     hdms_prebake_time = models.CharField(max_length=400, blank=True, null=True)
@@ -101,9 +101,9 @@ class Patterning(models.Model):
 
 
 class PlasmaClean(models.Model):
-    chip_number = models.IntegerField()
-    chip_owner    = models.ForeignKey(User, on_delete=models.PROTECT)
-    creation_time = models.DateTimeField()
+    chip_number = models.IntegerField(blank=True)
+    chip_owner    = models.ForeignKey(User, on_delete=models.PROTECT, blank=True)
+    creation_time = models.DateTimeField(blank=True)
     o2_flow = models.CharField(max_length=400, blank=True, null=True)  # This field type is a guess.
     rf_power = models.CharField(max_length=400, blank=True, null=True)  # This field type is a guess.
     clean_time = models.CharField(max_length=400, blank=True, null=True)
@@ -113,9 +113,9 @@ class PlasmaClean(models.Model):
 
 
 class PlasmaEtch(models.Model):
-    chip_number = models.IntegerField()
-    chip_owner    = models.ForeignKey(User, on_delete=models.PROTECT)
-    creation_time = models.DateTimeField()
+    chip_number = models.IntegerField(blank=True)
+    chip_owner    = models.ForeignKey(User, on_delete=models.PROTECT, blank=True)
+    creation_time = models.DateTimeField(blank=True)
     o2_flow = models.CharField(max_length=400, blank=True, null=True)  # This field type is a guess.
     sf6_flow = models.CharField(max_length=400, blank=True, null=True)  # This field type is a guess.
     rf_power = models.CharField(max_length=400, blank=True, null=True)  # This field type is a guess.

@@ -114,6 +114,54 @@ def save_form(processes, request):
             new_model.save()
     return "Done"
 
+def parse_forms(used_processes, request):
+    invalid_form = False
+    forms = []
+    for process in used_processes:
+        if process == "Aluminum Etch":
+            form = AluminumEtchSearchForm(request.POST, request.FILES)
+            if not form.is_valid():
+                invalid_form = True
+            if invalid_form:
+                forms.append(form)
+        if process == "Aluminum Evaporation":
+            form = AluminumEvaporationSearchForm(request.POST, request.FILES)
+            if not form.is_valid():
+                invalid_form = True
+            if invalid_form:
+                forms.append(form)
+        if process == "Deposition":
+            form = DepositionTemplateSearchForm(request.POST, request.FILES)
+            if not form.is_valid():
+                invalid_form = True
+            if invalid_form:
+                forms.append(form)
+        if process == "Oxide Etch":
+            form = OxideEtchSearchForm(request.POST, request.FILES)
+            if not form.is_valid():
+                return ["Invalid", form]
+        if process == "Patterning":
+            form = PatterningSearchForm(request.POST, request.FILES)
+            if not form.is_valid():
+                invalid_form = True
+            if invalid_form:
+                forms.append(form)
+        if process == "Plasma Clean":
+            form = PlasmaCleanSearchForm(request.POST, request.FILES)
+            if not form.is_valid():
+                invalid_form = True
+            if invalid_form:
+                forms.append(form)
+        if process == "Plasma Etch":
+            form = PlasmaEtchSearchForm(request.POST, request.FILES)
+            if not form.is_valid():
+                invalid_form = True
+            if invalid_form:
+                forms.append(form)
+    if invalid_form:
+        return ["Invalid", forms]
+    return "Done"
+
 @login_required
 def start_page(request):
     context = {"message": "Welcome to the Hacker Fab Database"}
@@ -129,7 +177,11 @@ def search_page(request):
     if status == "Initial":
         context = compute_search_context(request.POST)
         return render(request, "search.html", context)
-    process = request.POST["used_process"] #TODO
+    used_processes = request.POST["used_process"]
+    parsed = parse_forms(used_processes, request)
+    if parsed[0] == "Invalid":
+        context = {"message": "Invalid Data Input", "processes": processes, "forms": parsed[1], "used_process": used_processes}
+        return render(request, "search.html", context)
     processes = get_processes()
     context = {"message": "Data Searched!","processes": processes}
     return render(request, "search.html", context)
