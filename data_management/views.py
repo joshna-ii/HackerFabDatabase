@@ -231,47 +231,76 @@ def parse_forms(used_processes, request):
                 invalid_form = True
             if invalid_form:
                 forms.append(form)
+            cleaned_data = form.cleaned_data
+            for key, value in cleaned_data.items():
+                if value != None:
+                    filters[key] = value
         if process == "AluminumEvaporation":
             form = AluminumEvaporationSearchForm(request.POST, request.FILES)
             if not form.is_valid():
                 invalid_form = True
             if invalid_form:
                 forms.append(form)
+            cleaned_data = form.cleaned_data
+            for key, value in cleaned_data.items():
+                if value != None:
+                    filters[key] = value
         if process == "Deposition":
             form = DepositionSearchForm(request.POST, request.FILES)
             if not form.is_valid():
                 invalid_form = True
             if invalid_form:
                 forms.append(form)
+            cleaned_data = form.cleaned_data
+            for key, value in cleaned_data.items():
+                if value != None:
+                    filters[key] = value
         if process == "OxideEtch":
             form = OxideEtchSearchForm(request.POST, request.FILES)
             if not form.is_valid():
                 return ["Invalid", form]
+            cleaned_data = form.cleaned_data
+            for key, value in cleaned_data.items():
+                if value != None:
+                    filters[key] = value
         if process == "Patterning":
             form = PatterningSearchForm(request.POST, request.FILES)
             if not form.is_valid():
                 invalid_form = True
             if invalid_form:
                 forms.append(form)
+            cleaned_data = form.cleaned_data
+            for key, value in cleaned_data.items():
+                if value != None:
+                    filters[key] = value
         if process == "PlasmaClean":
             form = PlasmaCleanSearchForm(request.POST, request.FILES)
             if not form.is_valid():
                 invalid_form = True
             if invalid_form:
                 forms.append(form)
+            cleaned_data = form.cleaned_data
+            for key, value in cleaned_data.items():
+                if value != None:
+                    filters[key] = value
         if process == "PlasmaEtch":
             form = PlasmaEtchSearchForm(request.POST, request.FILES)
             if not form.is_valid():
                 invalid_form = True
             if invalid_form:
                 forms.append(form)
+            cleaned_data = form.cleaned_data
+            for key, value in cleaned_data.items():
+                if value != None:
+                    filters[key] = value
     if invalid_form:
         return ["Invalid", forms]
-    print(filters)
     return [filters]
 
-# def filter_form(input_dict):
-#     for input_dict.keys():
+def filter_form(input_dict):
+    input_dict = input_dict[0]
+    for i in input_dict.keys():
+        return
         
 
 @login_required
