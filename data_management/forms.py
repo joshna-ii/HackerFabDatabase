@@ -9,6 +9,8 @@ class AluminumEtchSearchForm(forms.ModelForm):
         model = AluminumEtch
         exclude = (
             'metrology_link',
+            'chip_owner',
+            'chip_number',
         )
         labels = {
             'chip_owner': "Enter Username",
@@ -19,6 +21,8 @@ class AluminumEvaporationSearchForm(forms.ModelForm):
         model = AluminumEvaporation
         exclude = (
             'metrology_link',
+            'chip_owner',
+            'chip_number',
         )
         labels = {
             'chip_owner': "Enter Username",
@@ -27,11 +31,8 @@ class AluminumEvaporationSearchForm(forms.ModelForm):
 class ChipListSearchForm(forms.ModelForm):
     class Meta:
         model = ChipList
-        exclude = (
-            'metrology_link',
-        )
+        exclude = ()
         labels = {
-            'chip_owner': "Enter Username",
         }
 
 class DepositionTemplateSearchForm(forms.ModelForm):
@@ -39,6 +40,8 @@ class DepositionTemplateSearchForm(forms.ModelForm):
         model = DepositionTemplate
         exclude = (
             'metrology_link',
+            'chip_owner',
+            'chip_number',
         )
         labels = {
             'chip_owner': "Enter Username",
@@ -49,6 +52,8 @@ class OxideEtchSearchForm(forms.ModelForm):
         model = OxideEtch
         exclude = (
             'metrology_link',
+            'chip_owner',
+            'chip_number',
         )
         labels = {
             'chip_owner': "Enter Username",
@@ -59,6 +64,8 @@ class PatterningSearchForm(forms.ModelForm):
         model = Patterning
         exclude = (
             'metrology_link',
+            'chip_owner',
+            'chip_number',
         )
         labels = {
             'chip_owner': "Enter Username",
@@ -69,6 +76,8 @@ class PlasmaCleanSearchForm(forms.ModelForm):
         model = PlasmaClean
         exclude = (
             'metrology_link',
+            'chip_owner',
+            'chip_number',
         )
         labels = {
             'chip_owner': "Enter Username",
@@ -79,6 +88,8 @@ class PlasmaEtchSearchForm(forms.ModelForm):
         model = PlasmaEtch
         exclude = (
             'metrology_link',
+            'chip_owner',
+            'chip_number',
         )
         labels = {
             'chip_owner': "Enter Username",
@@ -103,10 +114,7 @@ class AluminumEvaporationForm(forms.ModelForm):
 class ChipListForm(forms.ModelForm):
     class Meta:
         model = ChipList
-        exclude = (
-            'chip_owner',
-            'creation_time',
-        )
+        exclude = ()
 
 class DepositionTemplateForm(forms.ModelForm):
     class Meta:

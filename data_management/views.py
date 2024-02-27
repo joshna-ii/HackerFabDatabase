@@ -117,6 +117,7 @@ def save_form(processes, request):
 def parse_forms(used_processes, request):
     invalid_form = False
     forms = []
+    filters = []
     for process in used_processes:
         if process == "Aluminum Etch":
             form = AluminumEtchSearchForm(request.POST, request.FILES)
