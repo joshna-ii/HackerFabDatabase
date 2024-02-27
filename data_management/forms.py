@@ -4,6 +4,85 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from data_management.models import AluminumEtch, AluminumEvaporation, ChipList, DepositionTemplate, OxideEtch, Patterning, PlasmaClean, PlasmaEtch
 
+class AluminumEtchSearchForm(forms.ModelForm):
+    class Meta:
+        model = AluminumEtch
+        exclude = (
+            'metrology_link',
+        )
+        labels = {
+            'chip_owner': "Enter Username",
+        }
+
+class AluminumEvaporationSearchForm(forms.ModelForm):
+    class Meta:
+        model = AluminumEvaporation
+        exclude = (
+            'metrology_link',
+        )
+        labels = {
+            'chip_owner': "Enter Username",
+        }
+
+class ChipListSearchForm(forms.ModelForm):
+    class Meta:
+        model = ChipList
+        exclude = (
+            'metrology_link',
+        )
+        labels = {
+            'chip_owner': "Enter Username",
+        }
+
+class DepositionTemplateSearchForm(forms.ModelForm):
+    class Meta:
+        model = DepositionTemplate
+        exclude = (
+            'metrology_link',
+        )
+        labels = {
+            'chip_owner': "Enter Username",
+        }
+
+class OxideEtchSearchForm(forms.ModelForm):
+    class Meta:
+        model = OxideEtch
+        exclude = (
+            'metrology_link',
+        )
+        labels = {
+            'chip_owner': "Enter Username",
+        }
+
+class PatterningSearchForm(forms.ModelForm):
+    class Meta:
+        model = Patterning
+        exclude = (
+            'metrology_link',
+        )
+        labels = {
+            'chip_owner': "Enter Username",
+        }
+
+class PlasmaCleanSearchForm(forms.ModelForm):
+    class Meta:
+        model = PlasmaClean
+        exclude = (
+            'metrology_link',
+        )
+        labels = {
+            'chip_owner': "Enter Username",
+        }
+
+class PlasmaEtchSearchForm(forms.ModelForm):
+    class Meta:
+        model = PlasmaEtch
+        exclude = (
+            'metrology_link',
+        )
+        labels = {
+            'chip_owner': "Enter Username",
+        }
 
 class AluminumEtchForm(forms.ModelForm):
     class Meta:

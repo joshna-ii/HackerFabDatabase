@@ -15,6 +15,7 @@ from django.utils import timezone
 
 from data_management.forms import LoginForm, RegisterForm, AluminumEtchForm, AluminumEvaporationForm, ChipListForm, DepositionTemplateForm, OxideEtchForm, PatterningForm, PlasmaCleanForm, PlasmaEtchForm
 from data_management.models import AluminumEtch, AluminumEvaporation, ChipList, DepositionTemplate, OxideEtch, Patterning, PlasmaClean, PlasmaEtch
+from data_management.forms import AluminumEtchSearchForm, AluminumEvaporationSearchForm, DepositionTemplateSearchForm, OxideEtchSearchForm, PatterningSearchForm, PlasmaCleanSearchForm, PlasmaEtchSearchForm
 
 def get_processes():
     processes = []
@@ -25,7 +26,7 @@ def get_processes():
         processes.append(process)
     return processes
 
-def get_meas(processes):
+def get_input_meas(processes):
     forms = []
     for process in processes:
         if process == "Aluminum Etch":
@@ -42,6 +43,27 @@ def get_meas(processes):
             form = PlasmaCleanForm()
         if process == "Plasma Etch":
             form = PlasmaEtchForm()
+        f = {"name": f'{process}', "form": form}
+        forms.append(f)
+    return forms
+
+def get_search_meas(processes):
+    forms = []
+    for process in processes:
+        if process == "Aluminum Etch":
+            form = AluminumEtchSearchForm()
+        if process == "Aluminum Evaporation":
+            form = AluminumEvaporationSearchForm()
+        if process == "Deposition":
+            form = DepositionTemplateSearchForm()
+        if process == "Oxide Etch":
+            form = OxideEtchSearchForm()
+        if process == "Patterning":
+            form = PatterningSearchForm()
+        if process == "Plasma Clean":
+            form = PlasmaCleanSearchForm()
+        if process == "Plasma Etch":
+            form = PlasmaEtchSearchForm()
         f = {"name": f'{process}', "form": form}
         forms.append(f)
     return forms
@@ -136,7 +158,7 @@ def process_input(request, word):
     return request[word]
 
 def compute_input_context(process):
-    measurements = get_meas([process])
+    measurements = get_input_meas([process])
     processes = get_processes()
     context = {"processes": processes, "forms": measurements, "used_process": process}
     return context
@@ -153,7 +175,7 @@ def process_search(request):
 def compute_search_context(request):
     processes = get_processes()
     rel_processes = process_search(request)
-    measurements = get_meas(rel_processes)
+    measurements = get_search_meas(rel_processes)
     context = {"message": "Search Data here", "processes": processes, "forms": measurements, "used_process": rel_processes}
     return context
 
