@@ -2,13 +2,13 @@ from django import forms
 
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
-from data_management.models import AluminumEtch, AluminumEvaporation, ChipList, DepositionTemplate, OxideEtch, Patterning, PlasmaClean, PlasmaEtch
+from data_management.models import AluminumEtch, AluminumEvaporation, ChipList, Deposition, OxideEtch, Patterning, PlasmaClean, PlasmaEtch
 
 class AluminumEtchSearchForm(forms.ModelForm):
     class Meta:
         model = AluminumEtch
         exclude = (
-            'metrology_link',
+            'AluminumEtch_metrology_link',
             'chip_owner',
             'chip_number',
         )
@@ -20,7 +20,7 @@ class AluminumEvaporationSearchForm(forms.ModelForm):
     class Meta:
         model = AluminumEvaporation
         exclude = (
-            'metrology_link',
+            'AluminumEvaporation_metrology_link',
             'chip_owner',
             'chip_number',
         )
@@ -35,11 +35,11 @@ class ChipListSearchForm(forms.ModelForm):
         labels = {
         }
 
-class DepositionTemplateSearchForm(forms.ModelForm):
+class DepositionSearchForm(forms.ModelForm):
     class Meta:
-        model = DepositionTemplate
+        model = Deposition
         exclude = (
-            'metrology_link',
+            'Deposition_metrology_link',
             'chip_owner',
             'chip_number',
         )
@@ -51,7 +51,7 @@ class OxideEtchSearchForm(forms.ModelForm):
     class Meta:
         model = OxideEtch
         exclude = (
-            'metrology_link',
+            'OxideEtch_metrology_link',
             'chip_owner',
             'chip_number',
         )
@@ -63,7 +63,7 @@ class PatterningSearchForm(forms.ModelForm):
     class Meta:
         model = Patterning
         exclude = (
-            'metrology_link',
+            'Patterning_metrology_link',
             'chip_owner',
             'chip_number',
         )
@@ -75,7 +75,7 @@ class PlasmaCleanSearchForm(forms.ModelForm):
     class Meta:
         model = PlasmaClean
         exclude = (
-            'metrology_link',
+            'PlasmaClean_metrology_link',
             'chip_owner',
             'chip_number',
         )
@@ -87,7 +87,7 @@ class PlasmaEtchSearchForm(forms.ModelForm):
     class Meta:
         model = PlasmaEtch
         exclude = (
-            'metrology_link',
+            'PlasmaEtch_metrology_link',
             'chip_owner',
             'chip_number',
         )
@@ -95,20 +95,20 @@ class PlasmaEtchSearchForm(forms.ModelForm):
             'chip_owner': "Enter Username",
         }
 
-class AluminumEtchForm(forms.ModelForm):
+class AluminumEtchInputForm(forms.ModelForm):
     class Meta:
         model = AluminumEtch
         exclude = (
             'chip_owner',
-            'creation_time',
+            'AluminumEtch_step_time',
         )
 
-class AluminumEvaporationForm(forms.ModelForm):
+class AluminumEvaporationInputForm(forms.ModelForm):
     class Meta:
         model = AluminumEvaporation
         exclude = (
             'chip_owner',
-            'creation_time',
+            'AluminumEvaporation_step_time',
         )
 
 class ChipListForm(forms.ModelForm):
@@ -116,44 +116,44 @@ class ChipListForm(forms.ModelForm):
         model = ChipList
         exclude = ()
 
-class DepositionTemplateForm(forms.ModelForm):
+class DepositionInputForm(forms.ModelForm):
     class Meta:
-        model = DepositionTemplate
+        model = Deposition
         exclude = (
             'chip_owner',
-            'creation_time',
+            'Deposition_step_time',
         )
 
-class OxideEtchForm(forms.ModelForm):
+class OxideEtchInputForm(forms.ModelForm):
     class Meta:
         model = OxideEtch
         exclude = (
             'chip_owner',
-            'creation_time',
+            'OxideEtch_step_time',
         )
 
-class PatterningForm(forms.ModelForm):
+class PatterningInputForm(forms.ModelForm):
     class Meta:
         model = Patterning
         exclude = (
             'chip_owner',
-            'creation_time',
+            'Patterning_step_time',
         )
 
-class PlasmaCleanForm(forms.ModelForm):
+class PlasmaCleanInputForm(forms.ModelForm):
     class Meta:
         model = PlasmaClean
         exclude = (
             'chip_owner',
-            'creation_time',
+            'PlasmaClean_step_time',
         )
 
-class PlasmaEtchForm(forms.ModelForm):
+class PlasmaEtchInputForm(forms.ModelForm):
     class Meta:
         model = PlasmaEtch
         exclude = (
             'chip_owner',
-            'creation_time',
+            'PlasmaEtch_step_time',
         )
 
 

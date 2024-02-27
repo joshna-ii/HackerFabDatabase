@@ -13,9 +13,9 @@ from django.contrib.auth import authenticate, login, logout
 
 from django.utils import timezone
 
-from data_management.forms import LoginForm, RegisterForm, AluminumEtchForm, AluminumEvaporationForm, ChipListForm, DepositionTemplateForm, OxideEtchForm, PatterningForm, PlasmaCleanForm, PlasmaEtchForm
-from data_management.models import AluminumEtch, AluminumEvaporation, ChipList, DepositionTemplate, OxideEtch, Patterning, PlasmaClean, PlasmaEtch
-from data_management.forms import AluminumEtchSearchForm, AluminumEvaporationSearchForm, DepositionTemplateSearchForm, OxideEtchSearchForm, PatterningSearchForm, PlasmaCleanSearchForm, PlasmaEtchSearchForm
+from data_management.forms import LoginForm, RegisterForm, AluminumEtchInputForm, AluminumEvaporationInputForm, ChipListForm, DepositionInputForm, OxideEtchInputForm, PatterningInputForm, PlasmaCleanInputForm, PlasmaEtchInputForm
+from data_management.models import AluminumEtch, AluminumEvaporation, ChipList, Deposition, OxideEtch, Patterning, PlasmaClean, PlasmaEtch
+from data_management.forms import AluminumEtchSearchForm, AluminumEvaporationSearchForm, DepositionSearchForm, OxideEtchSearchForm, PatterningSearchForm, PlasmaCleanSearchForm, PlasmaEtchSearchForm
 
 def get_processes():
     processes = []
@@ -30,19 +30,19 @@ def get_input_meas(processes):
     forms = []
     for process in processes:
         if process == "Aluminum Etch":
-            form = AluminumEtchForm()
+            form = AluminumEtchInputForm()
         if process == "Aluminum Evaporation":
-            form = AluminumEvaporationForm()
+            form = AluminumEvaporationInputForm()
         if process == "Deposition":
-            form = DepositionTemplateForm()
+            form = DepositionInputForm()
         if process == "Oxide Etch":
-            form = OxideEtchForm()
+            form = OxideEtchInputForm()
         if process == "Patterning":
-            form = PatterningForm()
+            form = PatterningInputForm()
         if process == "Plasma Clean":
-            form = PlasmaCleanForm()
+            form = PlasmaCleanInputForm()
         if process == "Plasma Etch":
-            form = PlasmaEtchForm()
+            form = PlasmaEtchInputForm()
         f = {"name": f'{process}', "form": form}
         forms.append(f)
     return forms
@@ -55,7 +55,7 @@ def get_search_meas(processes):
         if process == "Aluminum Evaporation":
             form = AluminumEvaporationSearchForm()
         if process == "Deposition":
-            form = DepositionTemplateSearchForm()
+            form = DepositionSearchForm()
         if process == "Oxide Etch":
             form = OxideEtchSearchForm()
         if process == "Patterning":
@@ -71,46 +71,138 @@ def get_search_meas(processes):
 def save_form(processes, request):
     for process in processes:
         if process == "Aluminum Etch":
-            form = AluminumEtchForm(request.POST, request.FILES)
+            form = AluminumEtchInputForm(request.POST, request.FILES)
             if not form.is_valid():
                 return ["Invalid", form]
-            new_model = AluminumEtch(chip_number=request.POST['chip_number'], alum_etch_temp=request.POST['alum_etch_temp'], alum_etch_time=request.POST['alum_etch_time'], stir_rpm=request.POST['stir_rpm'], metric_alum_etch_depth=request.POST['metric_alum_etch_depth'], metric_photoresist_peeling=request.POST['metric_photoresist_peeling'], metric_aluminum_peeling=request.POST['metric_aluminum_peeling'], metrology_link=request.POST['metrology_link'], notes=request.POST['notes'], chip_owner=request.user, creation_time=timezone.now())
+            new_model = AluminumEtch(
+                chip_number=request.POST['chip_number'], 
+                AluminumEtch_temp=request.POST['AluminumEtch_temp'], 
+                AluminumEtch_time=request.POST['AluminumEtch_time'], 
+                AluminumEtch_stir_rpm=request.POST['AluminumEtch_stir_rpm'], 
+                AluminumEtch_metric_alum_etch_depth=request.POST['AluminumEtch_metric_alum_etch_depth'], 
+                AluminumEtch_metric_photoresist_peeling=request.POST['AluminumEtch_metric_photoresist_peeling'], 
+                AluminumEtch_metric_aluminum_peeling=request.POST['AluminumEtch_metric_aluminum_peeling'], 
+                AluminumEtch_metrology_link=request.POST['AluminumEtch_metrology_link'], 
+                AluminumEtch_notes=request.POST['AluminumEtch_notes'], 
+                chip_owner=request.user, AluminumEtch_step_time=timezone.now()
+            )
             new_model.save()
         if process == "Aluminum Evaporation":
-            form = AluminumEvaporationForm(request.POST, request.FILES)
+            form = AluminumEvaporationInputForm(request.POST, request.FILES)
             if not form.is_valid():
                 return ["Invalid", form]
-            new_model = AluminumEvaporation(chip_number=request.POST['chip_number'], aluminum_evaporation_temp=request.POST['aluminum_evaporation_temp'], aluminum_evaporation_time=request.POST['aluminum_evaporation_time'], pressure_before_start_seq=request.POST['pressure_before_start_seq'], pressure_before_evaporation=request.POST['pressure_before_evaporation'], metric_layer_thickness=request.POST['metric_layer_thickness'], metric_layer_thick_qcm=request.POST['metric_layer_thick_qcm'], metric_deposition_rate=request.POST['metric_deposition_rate'], metrology_link=request.POST['metrology_link'], notes=request.POST['notes'], chip_owner=request.user, creation_time=timezone.now())
+            new_model = AluminumEvaporation(
+                chip_number=request.POST['chip_number'], 
+                AluminumEvaporation_temp=request.POST['AluminumEvaporation_temp'], 
+                AluminumEvaporation_time=request.POST['AluminumEvaporation_time'], 
+                AluminumEvaporation_pressure_before_start_seq=request.POST['AluminumEvaporation_pressure_before_start_seq'], 
+                AluminumEvaporation_pressure_before_evaporation=request.POST['AluminumEvaporation_pressure_before_evaporation'], 
+                AluminumEvaporation_metric_layer_thickness=request.POST['AluminumEvaporation_metric_layer_thickness'], 
+                AluminumEvaporation_metric_layer_thick_qcm=request.POST['AluminumEvaporation_metric_layer_thick_qcm'], 
+                AluminumEvaporation_metric_deposition_rate=request.POST['AluminumEvaporation_metric_deposition_rate'], 
+                AluminumEvaporation_metrology_link=request.POST['AluminumEvaporation_metrology_link'], 
+                AluminumEvaporation_notes=request.POST['AluminumEvaporation_notes'], 
+                chip_owner=request.user, AluminumEvaporation_step_time=timezone.now()
+            )
             new_model.save()
         if process == "Deposition":
-            form = DepositionTemplateForm(request.POST, request.FILES)
+            form = DepositionInputForm(request.POST, request.FILES)
             if not form.is_valid():
                 return ["Invalid", form]
-            new_model = DepositionTemplate(chip_number=request.POST['chip_number'], glass_type=request.POST['glass_type'], cleaning_step=request.POST['cleaning_step'], days_glass_at_room_temp=request.POST['days_glass_at_room_temp'], prebake_temp=request.POST['prebake_temp'], prebake_time=request.POST['prebake_time'], amount_drops=request.POST['amount_drops'], spin_rpm=request.POST['spin_rpm'], spin_time=request.POST['spin_time'], bake_temp=request.POST['bake_temp'], bake_time=request.POST['bake_time'], humidity=request.POST['humidity'], metric_layer_thickness=request.POST['metric_layer_thickness'], metric_cracking=request.POST['metric_cracking'], metric_particles=request.POST['metric_particles'], metrology_link=request.POST['metrology_link'], notes=request.POST['notes'], chip_owner=request.user, creation_time=timezone.now())
+            new_model = Deposition(
+                chip_number=request.POST['chip_number'], 
+                Deposition_glass_type=request.POST['Deposition_glass_type'], 
+                Deposition_cleaning_step=request.POST['Deposition_cleaning_step'], 
+                Deposition_days_glass_at_room_temp=request.POST['Deposition_days_glass_at_room_temp'], 
+                Deposition_prebake_temp=request.POST['Deposition_prebake_temp'], 
+                Deposition_prebake_time=request.POST['Deposition_prebake_time'], 
+                Deposition_amount_drops=request.POST['Deposition_amount_drops'], 
+                Deposition_spin_rpm=request.POST['Deposition_spin_rpm'], 
+                Deposition_spin_time=request.POST['Deposition_spin_time'], 
+                Deposition_bake_temp=request.POST['Deposition_bake_temp'], 
+                Deposition_bake_time=request.POST['Deposition_bake_time'], 
+                Deposition_humidity=request.POST['Deposition_humidity'], 
+                Deposition_metric_layer_thickness=request.POST['Deposition_metric_layer_thickness'], 
+                Deposition_metric_cracking=request.POST['Deposition_metric_cracking'], 
+                Deposition_metric_particles=request.POST['Deposition_metric_particles'], 
+                Deposition_metrology_link=request.POST['Deposition_metrology_link'], 
+                Deposition_notes=request.POST['Deposition_notes'], 
+                chip_owner=request.user, Deposition_step_time=timezone.now()
+            )
             new_model.save()
         if process == "Oxide Etch":
-            form = OxideEtchForm(request.POST, request.FILES)
+            form = OxideEtchInputForm(request.POST, request.FILES)
             if not form.is_valid():
                 return ["Invalid", form]
-            new_model = OxideEtch(chip_number=request.POST['chip_number'], max_temp_glass_reached=request.POST['max_temp_glass_reached'], oxide_etch_time=request.POST['oxide_etch_time'], oxide_etch_temp=request.POST['oxide_etch_temp'], metric_oxide_etch_depth=request.POST['metric_oxide_etch_depth'], metrology_link=request.POST['metrology_link'], notes=request.POST['notes'], chip_owner=request.user, creation_time=timezone.now())
+            new_model = OxideEtch(
+                chip_number=request.POST['chip_number'], 
+                OxideEtch_max_temp_glass_reached=request.POST['OxideEtch_max_temp_glass_reached'], 
+                OxideEtch_time=request.POST['OxideEtch_time'], 
+                OxideEtch_temp=request.POST['OxideEtch_temp'], 
+                OxideEtch_metric_oxide_etch_depth=request.POST['OxideEtch_metric_oxide_etch_depth'], 
+                OxideEtch_metrology_link=request.POST['OxideEtch_metrology_link'], 
+                OxideEtch_notes=request.POST['OxideEtch_notes'], 
+                chip_owner=request.user, OxideEtch_step_time=timezone.now())
             new_model.save()
         if process == "Patterning":
-            form = PatterningForm(request.POST, request.FILES)
+            form = PatterningInputForm(request.POST, request.FILES)
             if not form.is_valid():
                 return ["Invalid", form]
-            new_model = Patterning(chip_number=request.POST['chip_number'], underlying_material=request.POST['underlying_material'], hdms_prebake_temp=request.POST['hdms_prebake_temp'], hdms_prebake_time=request.POST['hdms_prebake_time'], hdms_spin_rpm=request.POST['hdms_spin_rpm'], hdms_spin_time=request.POST['hdms_spin_time'], hdms_bake_temp=request.POST['hdms_bake_temp'], hdms_bake_time=request.POST['hdms_bake_time'], photoresist_spin_rpm=request.POST['photoresist_spin_rpm'], photoresist_spin_time=request.POST['photoresist_spin_time'], photoresist_bake_temp=request.POST['photoresist_bake_temp'], photoresist_bake_time=request.POST['photoresist_bake_time'], exposure_pattern=request.POST['exposure_pattern'], exposure_time=request.POST['exposure_time'], develop_time=request.POST['develop_time'], metric_pattern_quality=request.POST['metric_pattern_quality'], metric_leftover_photoresist=request.POST['metric_leftover_photoresist'], metric_missing_photoresist=request.POST['metric_missing_photoresist'], metric_contaminants=request.POST['metric_contaminants'], metrology_link=request.POST['metrology_link'], notes=request.POST['notes'], chip_owner=request.user, creation_time=timezone.now())
+            new_model = Patterning(
+                chip_number=request.POST['chip_number'], 
+                Patterning_underlying_material=request.POST['Patterning_underlying_material'], 
+                Patterning_hdms_prebake_temp=request.POST['Patterning_hdms_prebake_temp'], 
+                Patterning_hdms_prebake_time=request.POST['Patterning_hdms_prebake_time'], 
+                Patterning_hdms_spin_rpm=request.POST['Patterning_hdms_spin_rpm'], 
+                Patterning_hdms_spin_time=request.POST['Patterning_hdms_spin_time'], 
+                Patterning_hdms_bake_temp=request.POST['Patterning_hdms_bake_temp'], 
+                Patterning_hdms_bake_time=request.POST['Patterning_hdms_bake_time'], 
+                Patterning_photoresist_spin_rpm=request.POST['Patterning_photoresist_spin_rpm'], 
+                Patterning_photoresist_spin_time=request.POST['Patterning_photoresist_spin_time'], 
+                Patterning_photoresist_bake_temp=request.POST['Patterning_photoresist_bake_temp'], 
+                Patterning_photoresist_bake_time=request.POST['Patterning_photoresist_bake_time'], 
+                Patterning_exposure_pattern=request.POST['Patterning_exposure_pattern'], 
+                Patterning_exposure_time=request.POST['Patterning_exposure_time'], 
+                Patterning_develop_time=request.POST['Patterning_develop_time'], 
+                Patterning_metric_pattern_quality=request.POST['Patterning_metric_pattern_quality'], 
+                Patterning_metric_leftover_photoresist=request.POST['Patterning_metric_leftover_photoresist'], 
+                Patterning_metric_missing_photoresist=request.POST['Patterning_metric_missing_photoresist'], 
+                Patterning_metric_contaminants=request.POST['Patterning_metric_contaminants'], 
+                Patterning_metrology_link=request.POST['Patterning_metrology_link'], 
+                Patterning_notes=request.POST['Patterning_notes'], 
+                chip_owner=request.user, Patterning_step_time=timezone.now()
+            )
             new_model.save()
         if process == "Plasma Clean":
-            form = PlasmaCleanForm(request.POST, request.FILES)
+            form = PlasmaCleanInputForm(request.POST, request.FILES)
             if not form.is_valid():
                 return ["Invalid", form]
-            new_model = PlasmaClean(chip_number=request.POST['chip_number'], o2_flow=request.POST['o2_flow'], rf_power=request.POST['rf_power'], clean_time=request.POST['clean_time'], metric_contaminants=request.POST['metric_contaminants'], metrology_link=request.POST['metrology_link'], notes=request.POST['notes'], chip_owner=request.user, creation_time=timezone.now())
+            new_model = PlasmaClean(
+                chip_number=request.POST['chip_number'], 
+                PlasmaClean_o2_flow=request.POST['PlasmaClean_o2_flow'], 
+                PlasmaClean_rf_power=request.POST['PlasmaClean_rf_power'], 
+                PlasmaClean_clean_time=request.POST['PlasmaClean_clean_time'], 
+                PlasmaClean_metric_contaminants=request.POST['PlasmaClean_metric_contaminants'], 
+                PlasmaClean_metrology_link=request.POST['PlasmaClean_metrology_link'], 
+                PlasmaClean_notes=request.POST['PlasmaClean_notes'], 
+                chip_owner=request.user, PlasmaClean_step_time=timezone.now()
+            )
             new_model.save()
         if process == "Plasma Etch":
-            form = PlasmaEtchForm(request.POST, request.FILES)
+            form = PlasmaEtchInputForm(request.POST, request.FILES)
             if not form.is_valid():
                 return ["Invalid", form]
-            new_model = PlasmaEtch(chip_number=request.POST['chip_number'], o2_flow=request.POST['o2_flow'], sf6_flow=request.POST['sf6_flow'], rf_power=request.POST['rf_power'], etch_time=request.POST['etch_time'], etch_depth=request.POST['etch_depth'], metrology_link=request.POST['metrology_link'], notes=request.POST['notes'], chip_owner=request.user, creation_time=timezone.now())
+            new_model = PlasmaEtch(
+                chip_number=request.POST['chip_number'], 
+                PlasmaEtch_o2_flow=request.POST['o2_flow'], 
+                PlasmaEtch_sf6_flow=request.POST['sf6_flow'], 
+                PlasmaEtch_rf_power=request.POST['rf_power'], 
+                PlasmaEtch_etch_time=request.POST['etch_time'], 
+                PlasmaEtch_etch_depth=request.POST['etch_depth'], 
+                PlasmaEtch_metrology_link=request.POST['metrology_link'], 
+                PlasmaEtch_notes=request.POST['notes'], 
+                chip_owner=request.user, PlasmaEtch_step_time=timezone.now()
+            )
             new_model.save()
     return "Done"
 
@@ -132,7 +224,7 @@ def parse_forms(used_processes, request):
             if invalid_form:
                 forms.append(form)
         if process == "Deposition":
-            form = DepositionTemplateSearchForm(request.POST, request.FILES)
+            form = DepositionSearchForm(request.POST, request.FILES)
             if not form.is_valid():
                 invalid_form = True
             if invalid_form:
@@ -162,6 +254,10 @@ def parse_forms(used_processes, request):
     if invalid_form:
         return ["Invalid", forms]
     return "Done"
+
+# def filter_form(input_dict):
+#     for input_dict.keys():
+        
 
 @login_required
 def start_page(request):
