@@ -8,9 +8,14 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+class ChipList(models.Model):
+    chip_number = models.IntegerField(primary_key=True, blank=True)
+    chip_owner    = models.ForeignKey(User, on_delete=models.PROTECT, blank=True)
+    creation_time = models.DateTimeField(blank=True)
+    notes = models.CharField(max_length=400, blank=True, null=True)  # This field type is a guess.
 
 class AluminumEtch(models.Model):
-    chip_number = models.IntegerField(blank=True)
+    chip_number = models.ForeignKey(ChipList, on_delete=models.PROTECT, blank=True)
     chip_owner    = models.ForeignKey(User, on_delete=models.PROTECT, blank=True)
     creation_time = models.DateTimeField(blank=True)
     alum_etch_temp = models.CharField(max_length=400, blank=True, null=True)
@@ -24,7 +29,7 @@ class AluminumEtch(models.Model):
 
 
 class AluminumEvaporation(models.Model):
-    chip_number = models.IntegerField(blank=True)
+    chip_number = models.ForeignKey(ChipList, on_delete=models.PROTECT, blank=True)
     chip_owner    = models.ForeignKey(User, on_delete=models.PROTECT, blank=True)
     creation_time = models.DateTimeField(blank=True)
     aluminum_evaporation_temp = models.CharField(max_length=400, blank=True, null=True)  # This field type is a guess.
@@ -37,13 +42,8 @@ class AluminumEvaporation(models.Model):
     metrology_link = models.CharField(max_length=400, blank=True, null=True)  # This field type is a guess.
     notes = models.CharField(max_length=400, blank=True, null=True)  # This field type is a guess.
 
-class ChipList(models.Model):
-    chip_number = models.IntegerField(blank=True)
-    chip_owner    = models.ForeignKey(User, on_delete=models.PROTECT, blank=True)
-    creation_time = models.DateTimeField(blank=True)
-    notes = models.CharField(max_length=400, blank=True, null=True)  # This field type is a guess.
 class DepositionTemplate(models.Model):
-    chip_number = models.IntegerField(blank=True)
+    chip_number = models.ForeignKey(ChipList, on_delete=models.PROTECT, blank=True)
     chip_owner    = models.ForeignKey(User, on_delete=models.PROTECT, blank=True)
     creation_time = models.DateTimeField(blank=True)
     glass_type = models.CharField(max_length=400, blank=True, null=True)
@@ -64,7 +64,7 @@ class DepositionTemplate(models.Model):
     notes = models.CharField(max_length=400, blank=True, null=True)  # This field type is a guess.
 
 class OxideEtch(models.Model):
-    chip_number = models.IntegerField(blank=True)
+    chip_number = models.ForeignKey(ChipList, on_delete=models.PROTECT, blank=True)
     chip_owner    = models.ForeignKey(User, on_delete=models.PROTECT, blank=True)
     creation_time = models.DateTimeField(blank=True)
     max_temp_glass_reached = models.CharField(max_length=400, blank=True, null=True)
@@ -75,7 +75,7 @@ class OxideEtch(models.Model):
     notes = models.CharField(max_length=400, blank=True, null=True)  # This field type is a guess.
 
 class Patterning(models.Model):
-    chip_number = models.IntegerField(blank=True)
+    chip_number = models.ForeignKey(ChipList, on_delete=models.PROTECT, blank=True)
     chip_owner    = models.ForeignKey(User, on_delete=models.PROTECT, blank=True)
     creation_time = models.DateTimeField(blank=True)
     underlying_material = models.CharField(max_length=400, blank=True, null=True)  # This field type is a guess.
@@ -101,7 +101,7 @@ class Patterning(models.Model):
 
 
 class PlasmaClean(models.Model):
-    chip_number = models.IntegerField(blank=True)
+    chip_number = models.ForeignKey(ChipList, on_delete=models.PROTECT, blank=True)
     chip_owner    = models.ForeignKey(User, on_delete=models.PROTECT, blank=True)
     creation_time = models.DateTimeField(blank=True)
     o2_flow = models.CharField(max_length=400, blank=True, null=True)  # This field type is a guess.
@@ -113,7 +113,7 @@ class PlasmaClean(models.Model):
 
 
 class PlasmaEtch(models.Model):
-    chip_number = models.IntegerField(blank=True)
+    chip_number = models.ForeignKey(ChipList, on_delete=models.PROTECT, blank=True)
     chip_owner    = models.ForeignKey(User, on_delete=models.PROTECT, blank=True)
     creation_time = models.DateTimeField(blank=True)
     o2_flow = models.CharField(max_length=400, blank=True, null=True)  # This field type is a guess.
