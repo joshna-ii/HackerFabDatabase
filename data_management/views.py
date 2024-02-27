@@ -48,6 +48,7 @@ def get_input_meas(processes):
     return forms
 
 def get_search_meas(processes):
+    processes = processes.split(",")
     forms = []
     for process in processes:
         if process == "AluminumEtch":
@@ -353,8 +354,10 @@ def search_page(request):
         context = compute_search_context(request.POST)
         return render(request, "search.html", context)
     used_processes = request.POST["used_process"]
+    print(used_processes)
     parsed = parse_forms(used_processes, request)
     if parsed[0] == "Invalid":
+        get_processes()
         context = {"message": "Invalid Data Input", "processes": processes, "forms": parsed[1], "used_process": used_processes}
         return render(request, "search.html", context)
     processes = get_processes()
@@ -391,13 +394,13 @@ def compute_input_context(process):
     return context
 
 def process_search(request):
-    rel_processes = []
+    rel_processes = ""
     for key, value in request.lists():
-        if key != "status":
+        if key != "status" and key != "csrfmiddlewaretoken":
             k = key[1:]
             if " " in k:
                 k = k.split(" ")[0] + k.split(" ")[1]
-            rel_processes.append(k)
+            rel_processes += k + ","
     rel_processes = rel_processes[:-1]
     return rel_processes
 
