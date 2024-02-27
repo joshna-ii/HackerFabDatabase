@@ -20,7 +20,11 @@ import data_management.views as views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.start_page),
-    path('input', views.input_page),
-    path('search', views.search_page),
+    path('', views.start_page, name='home'),
+    path('login', views.login_action, name='login'),
+    path('logout', views.logout_action, name='logout'),
+    path('register', views.register_action, name='register'),
+    path('main', views.start_page, name="main"),
+    path('input', views.input_page, name="input"),
+    path('search', views.search_page, name="search"),
 ]

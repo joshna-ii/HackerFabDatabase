@@ -1,5 +1,7 @@
 <!doctype html>
 <html>
+{% extends "base.html" %}
+{% block content %}
 <head>
     <meta charset="utf-8">
     <title>Hacker Fab</title>
@@ -7,12 +9,6 @@
     <link rel="stylesheet" href="{% static 'data_management.css' %}">
 </head>
 <body>
-    <div id="menu">
-        <form class="main_menu" action="/" method="POST">
-          <button id="main_menu">Main Menu</button>
-        {% csrf_token %}
-        </form>
-    </div>
     <form action="search" method="POST">
         <div class = "process_sort" id="process_sort"> Select Processes to Sort By </div>
         {% for process in processes %}
@@ -20,20 +16,24 @@
             <label for="{{process.id}}"> {{process.name}}</label><br>
         {% endfor %}
         <input type="submit" value="Submit">
+        <input type="hidden" name="status" value="Initial">
         {% csrf_token %}
     </form>
     
-    <div id="matrix">
-        <form name="form2" id="form2" action="/search" method="POST">
-          {% for cell in matrix %}
-            <div class="{{cell.id}}" id="{{cell.id}}"><p><dfn title="insert explanation here">{{cell.name}}</dfn></p></div>
-            <input id="value_text" type=text name=name><br>
-          {% endfor %}
-          {% if matrix %}
-            <input type="submit" value="Submit">
-          {% endif %}
-          {% csrf_token %}
-        </form>
-      </div>
+    {% if used_process %}
+      <form action="search" method=POST enctype="multipart/form-data">
+        {% for f in forms %}
+          {{f.name}}
+          <table>
+              {{f.form}}
+          </table>
+        {% endfor %}
+        <button  id="id_update_profile_button">Submit</button>
+        <input type="hidden" name="status" value="Secondary">
+        <input type="hidden" name="used_process" value={{used_process}}>
+        {% csrf_token %}
+    </form>
+  {% endif %}
 </body>
 </html>
+{% endblock %}

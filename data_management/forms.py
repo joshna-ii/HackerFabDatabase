@@ -2,6 +2,72 @@ from django import forms
 
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
+from data_management.models import AluminumEtch, AluminumEvaporation, ChipList, DepositionTemplate, OxideEtch, Patterning, PlasmaClean, PlasmaEtch
+
+
+class AluminumEtchForm(forms.ModelForm):
+    class Meta:
+        model = AluminumEtch
+        exclude = (
+            'chip_owner',
+            'creation_time',
+        )
+
+class AluminumEvaporationForm(forms.ModelForm):
+    class Meta:
+        model = AluminumEvaporation
+        exclude = (
+            'chip_owner',
+            'creation_time',
+        )
+
+class ChipListForm(forms.ModelForm):
+    class Meta:
+        model = ChipList
+        exclude = (
+            'chip_owner',
+            'creation_time',
+        )
+
+class DepositionTemplateForm(forms.ModelForm):
+    class Meta:
+        model = DepositionTemplate
+        exclude = (
+            'chip_owner',
+            'creation_time',
+        )
+
+class OxideEtchForm(forms.ModelForm):
+    class Meta:
+        model = OxideEtch
+        exclude = (
+            'chip_owner',
+            'creation_time',
+        )
+
+class PatterningForm(forms.ModelForm):
+    class Meta:
+        model = Patterning
+        exclude = (
+            'chip_owner',
+            'creation_time',
+        )
+
+class PlasmaCleanForm(forms.ModelForm):
+    class Meta:
+        model = PlasmaClean
+        exclude = (
+            'chip_owner',
+            'creation_time',
+        )
+
+class PlasmaEtchForm(forms.ModelForm):
+    class Meta:
+        model = PlasmaEtch
+        exclude = (
+            'chip_owner',
+            'creation_time',
+        )
 
 
 class LoginForm(forms.Form):
