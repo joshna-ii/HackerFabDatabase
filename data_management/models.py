@@ -46,8 +46,9 @@ class DepositionTemplate(models.Model):
     chip_number = models.IntegerField()
     chip_owner    = models.ForeignKey(User, on_delete=models.PROTECT)
     creation_time = models.DateTimeField()
+    glass_type = models.CharField(max_length=400, blank=True, null=True)
     cleaning_step = models.CharField(max_length=400, blank=True, null=True)  # This field type is a guess.
-    days_p504_at_room_temp = models.CharField(max_length=400, blank=True, null=True)
+    days_glass_at_room_temp = models.CharField(max_length=400, blank=True, null=True)
     prebake_temp = models.CharField(max_length=400, blank=True, null=True)
     prebake_time = models.CharField(max_length=400, blank=True, null=True)
     amount_drops = models.CharField(max_length=400, blank=True, null=True)
