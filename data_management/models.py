@@ -14,6 +14,12 @@ class ChipList(models.Model):
     creation_time = models.DateTimeField(blank=True)
     notes = models.CharField(max_length=400, blank=True, null=True)  # This field type is a guess.
 
+class ChipListSearch(models.Model):
+    chip_number = models.IntegerField(blank=True)
+    chip_owner    = models.ForeignKey(User, on_delete=models.PROTECT, blank=True)
+    creation_time = models.DateTimeField(blank=True)
+    notes = models.CharField(max_length=400, blank=True, null=True)  # This field type is a guess.
+
 class AluminumEtch(models.Model):
     chip_number = models.ForeignKey(ChipList, on_delete=models.PROTECT, blank=True)
     chip_owner    = models.ForeignKey(User, on_delete=models.PROTECT, blank=True)
@@ -26,7 +32,6 @@ class AluminumEtch(models.Model):
     AluminumEtch_metric_aluminum_peeling = models.CharField(max_length=400, blank=True, null=True)  # This field type is a guess.
     AluminumEtch_metrology_link = models.CharField(max_length=400, blank=True, null=True)  # This field type is a guess.
     AluminumEtch_notes = models.CharField(max_length=400, blank=True, null=True)  # This field type is a guess.
-
 
 class AluminumEvaporation(models.Model):
     chip_number = models.ForeignKey(ChipList, on_delete=models.PROTECT, blank=True)
@@ -99,7 +104,6 @@ class Patterning(models.Model):
     Patterning_metrology_link = models.CharField(max_length=400, blank=True, null=True)  # This field type is a guess.
     Patterning_notes = models.CharField(max_length=400, blank=True, null=True)  # This field type is a guess.
 
-
 class PlasmaClean(models.Model):
     chip_number = models.ForeignKey(ChipList, on_delete=models.PROTECT, blank=True)
     chip_owner    = models.ForeignKey(User, on_delete=models.PROTECT, blank=True)
@@ -110,7 +114,6 @@ class PlasmaClean(models.Model):
     PlasmaClean_metric_contaminants = models.CharField(max_length=400, blank=True, null=True)  # This field type is a guess.
     PlasmaClean_metrology_link = models.CharField(max_length=400, blank=True, null=True)  # This field type is a guess.
     PlasmaClean_notes = models.CharField(max_length=400, blank=True, null=True)  # This field type is a guess.
-
 
 class PlasmaEtch(models.Model):
     chip_number = models.ForeignKey(ChipList, on_delete=models.PROTECT, blank=True)
