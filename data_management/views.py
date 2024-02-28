@@ -49,7 +49,7 @@ def get_input_meas(processes):
     return forms
 
 def get_search_meas(processes):
-    processes = processes.split(',')
+    processes = processes.split(",")
     forms = []
     for process in processes:
         if process == "AluminumEtch":
