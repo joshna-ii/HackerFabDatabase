@@ -12,6 +12,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 
 from django.utils import timezone
+from django.db.models import Q
 
 from data_management.forms import LoginForm, RegisterForm, ChipListSearchForm, AluminumEtchInputForm, AluminumEvaporationInputForm, ChipListForm, DepositionInputForm, OxideEtchInputForm, PatterningInputForm, PlasmaCleanInputForm, PlasmaEtchInputForm
 from data_management.models import AluminumEtch, AluminumEvaporation, ChipList, Deposition, OxideEtch, Patterning, PlasmaClean, PlasmaEtch
@@ -48,6 +49,7 @@ def get_input_meas(processes):
     return forms
 
 def get_search_meas(processes):
+    processes = processes.split(",")
     forms = []
     for process in processes:
         if process == "AluminumEtch":
@@ -72,7 +74,6 @@ def get_search_meas(processes):
 
 def save_form(processes, request):
     for process in processes:
-        print(process)
         if process == "AluminumEtch":
             form = AluminumEtchInputForm(request.POST, request.FILES)
             if not form.is_valid():
@@ -207,7 +208,6 @@ def save_form(processes, request):
                 chip_owner=request.user, PlasmaEtch_step_time=timezone.now()
             )
             new_model.save()
-        print(new_model)
     return "Done"
 
 def parse_forms(used_processes, request):
@@ -215,95 +215,160 @@ def parse_forms(used_processes, request):
     forms = []
     filters = {}
     used_processes = used_processes.split(",")
+    # filters['used_processes'] = used_processes
     for process in used_processes:
         process = re.sub("[^A-Za-z]","",process)
         if process == "ChipList":
             form = ChipListSearchForm(request.POST, request.FILES)
             if not form.is_valid():
                 invalid_form = True
-            if invalid_form:
-                forms.append(form)
+            forms.append(form)
             cleaned_data = form.cleaned_data
+            filters[process] = []
             for key, value in cleaned_data.items():
                 if value != None:
-                    filters[key] = value
+                    filters[process].append((key, value))
         if process == "AluminumEtch":
             form = AluminumEtchSearchForm(request.POST, request.FILES)
             if not form.is_valid():
                 invalid_form = True
-            if invalid_form:
-                forms.append(form)
+            forms.append(form)
             cleaned_data = form.cleaned_data
+            filters[process] = []
             for key, value in cleaned_data.items():
                 if value != None:
-                    filters[key] = value
+                    filters[process].append((key, value))
         if process == "AluminumEvaporation":
             form = AluminumEvaporationSearchForm(request.POST, request.FILES)
             if not form.is_valid():
                 invalid_form = True
-            if invalid_form:
-                forms.append(form)
+            forms.append(form)
             cleaned_data = form.cleaned_data
+            filters[process] = []
             for key, value in cleaned_data.items():
                 if value != None:
-                    filters[key] = value
+                    filters[process].append((key, value))
         if process == "Deposition":
             form = DepositionSearchForm(request.POST, request.FILES)
             if not form.is_valid():
                 invalid_form = True
-            if invalid_form:
-                forms.append(form)
+            forms.append(form)
             cleaned_data = form.cleaned_data
+            filters[process] = []
             for key, value in cleaned_data.items():
                 if value != None:
-                    filters[key] = value
+                    filters[process].append((key, value))
         if process == "OxideEtch":
             form = OxideEtchSearchForm(request.POST, request.FILES)
             if not form.is_valid():
                 return ["Invalid", form]
             cleaned_data = form.cleaned_data
+            filters[process] = []
             for key, value in cleaned_data.items():
                 if value != None:
-                    filters[key] = value
+                    filters[process].append((key, value))
         if process == "Patterning":
             form = PatterningSearchForm(request.POST, request.FILES)
             if not form.is_valid():
                 invalid_form = True
-            if invalid_form:
-                forms.append(form)
+            forms.append(form)
             cleaned_data = form.cleaned_data
+            filters[process] = []
             for key, value in cleaned_data.items():
                 if value != None:
-                    filters[key] = value
+                    filters[process].append((key, value))
         if process == "PlasmaClean":
             form = PlasmaCleanSearchForm(request.POST, request.FILES)
             if not form.is_valid():
                 invalid_form = True
-            if invalid_form:
-                forms.append(form)
+            forms.append(form)
             cleaned_data = form.cleaned_data
+            filters[process] = []
             for key, value in cleaned_data.items():
                 if value != None:
-                    filters[key] = value
+                    filters[process].append((key, value))
         if process == "PlasmaEtch":
             form = PlasmaEtchSearchForm(request.POST, request.FILES)
             if not form.is_valid():
                 invalid_form = True
-            if invalid_form:
-                forms.append(form)
+            forms.append(form)
             cleaned_data = form.cleaned_data
+            filters[process] = []
             for key, value in cleaned_data.items():
                 if value != None:
-                    filters[key] = value
+                    filters[process].append((key, value))
     if invalid_form:
         return ["Invalid", forms]
     return [filters]
 
 def filter_form(input_dict):
-    input_dict = input_dict[0]
-    for i in input_dict.keys():
-        return
-        
+    # input_dict = input_dict[0]
+    print("START FILTER:", input_dict)
+    q_list = []
+    for proc in input_dict.keys():
+        if proc == "ChipList":
+            query = Q()
+            for j in input_dict[proc]:
+                query &= Q((j[0], j[1]))
+            print(query)
+            q_obj = ChipList.objects.filter(query)
+            q_list.append(q_obj)
+        if proc == "AluminumEtch":
+            query = Q()
+            for j in input_dict[proc]:
+                query &= Q((j[0], j[1]))
+            print(query)
+            q_obj = AluminumEtch.objects.filter(query)
+            q_list.append(q_obj)
+        if proc == "AluminumEvaporation":
+            query = Q()
+            for j in input_dict[proc]:
+                query &= Q((j[0], j[1]))
+            print(query)
+            q_obj = AluminumEvaporation.objects.filter(query)
+            q_list.append(q_obj)
+        if proc == "Deposition":
+            query = Q()
+            for j in input_dict[proc]:
+                query &= Q((j[0], j[1]))
+            print(query)
+            q_obj = Deposition.objects.filter(query)
+            q_list.append(q_obj)
+        if proc == "OxideEtch":
+            query = Q()
+            for j in input_dict[proc]:
+                query &= Q((j[0], j[1]))
+            print(query)
+            q_obj = OxideEtch.objects.filter(query)
+            q_list.append(q_obj)
+        if proc == "Patterning":
+            query = Q()
+            for j in input_dict[proc]:
+                query &= Q((j[0], j[1]))
+            print(query)
+            q_obj = Patterning.objects.filter(query)
+            q_list.append(q_obj)
+        if proc == "PlasmaClean":
+            query = Q()
+            for j in input_dict[proc]:
+                query &= Q((j[0], j[1]))
+            print(query)
+            q_obj = PlasmaClean.objects.filter(query)
+            q_list.append(q_obj)
+        if proc == "PlasmaEtch":
+            query = Q()
+            for j in input_dict[proc]:
+                query &= Q((j[0], j[1]))
+            print(query)
+            q_obj = PlasmaEtch.objects.filter(query)
+            q_list.append(q_obj)
+            
+    
+    # print(processes)
+    # joined = ChipList.objects.select_related("chip_owner")
+    #.union(PlasmaEtch, all=True).filter(query)
+    print("qLIST", q_list[0])
+    return q_list
 
 @login_required
 def start_page(request):
@@ -353,12 +418,22 @@ def search_page(request):
     status = request.POST["status"]
     if status == "Initial":
         context = compute_search_context(request.POST)
+        # print("CONTEXT:", context)
         return render(request, "search.html", context)
-    used_processes = request.POST["used_process"]
+    used_processes = request.POST['used_process']
     parsed = parse_forms(used_processes, request)
+    print("PARSED:", parsed)
     if parsed[0] == "Invalid":
+        processes = get_processes()
         context = {"message": "Invalid Data Input", "processes": processes, "forms": parsed[1], "used_process": used_processes}
         return render(request, "search.html", context)
+    
+    output = filter_form(parsed[0])
+    print(output)
+    
+    # template = loader.get_template('template.html')
+    # return template.render(context, "template.html", request)
+
     processes = get_processes()
     context = {"message": "Data Searched!","processes": processes}
     return render(request, "search.html", context)
@@ -367,25 +442,19 @@ def search_page(request):
 def input_page(request):
     if request.method == 'GET':
         processes = get_processes()
-        processes.remove({'id': 'Chip List', 'name': 'Chip List'})
         context = {"message": "Input Data here","processes": processes}
-        print(context)
         return render(request, "input.html", context)
     status = request.POST["status"]
     if status == "Initial":
         new_process = process_input(request.POST, "Process")
-        print(new_process)
         context = compute_input_context(new_process)
-        print(context)
         return render(request, "input.html", context)
     process = request.POST["used_process"]
-    print(process)
     saved = save_form([process], request)
     if saved[0] == "Invalid":
         context = {"message": "Invalid Data Input", "processes": processes, "forms": [saved[1]], "used_process": process}
         return render(request, "input.html", context)
     processes = get_processes()
-    processes.remove({'id': 'Chip List', 'name': 'Chip List'})
     context = {"message": "Data Submitted!","processes": processes}
     return render(request, "input.html", context)
 
@@ -405,7 +474,7 @@ def process_search(request):
             k = key[1:]
             if " " in k:
                 k = k.split(" ")[0] + k.split(" ")[1]
-            rel_processes += k + ","
+            rel_processes += k + ','
     rel_processes = rel_processes[:-1]
     return rel_processes
 

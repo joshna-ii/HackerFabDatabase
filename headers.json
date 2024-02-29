@@ -13,7 +13,7 @@
     "Photoresist Leftover on Exposed Regions": ["yes", "no"],
     "Photoresist Missing on Non-Exposed Regions": ["yes", "no"]
 },
-"PlasmaEtch": {
+"Plasma Etch": {
     "Chip #": [],
     "Person": [],
     "Date": [],
@@ -23,7 +23,7 @@
     "Etch Time": [],
     "Etch Depth": []
 },
-"PlasmaClean": {
+"Plasma Clean": {
     "Chip #": [],
     "Person": [],
     "Date": [],
@@ -32,7 +32,7 @@
     "Clean Time": [],
     "Contaminants on Surface": ["-1", "0", "1"]
 },
-"OxideEtch": {
+"Oxide Etch": {
     "Chip #": [],
     "Person": [],
     "Date": [],
@@ -42,7 +42,7 @@
     "Room Temperature": [],
     "Etch Depth": []
 },
-"AluminumEtch": {
+"Aluminum Etch": {
     "Chip #": [],
     "Person": [],
     "Date": [],
@@ -73,7 +73,7 @@
     "Cracking": ["-1", "0", "1"],
     "Particle/Pinhole on Exposure": ["-1", "0", "1"]
 },
-"AluminumEvaporation": {
+"Aluminum Evaporation": {
     "Chip #": [],
     "Person": [],
     "Date": [],
