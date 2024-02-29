@@ -443,6 +443,7 @@ def search_page(request):
 def input_page(request):
     if request.method == 'GET':
         processes = get_processes()
+        processes.remove({'id': 'ChipList', 'name': 'ChipList'})
         context = {"message": "Input Data here","processes": processes}
         return render(request, "input.html", context)
     status = request.POST["status"]
@@ -456,6 +457,8 @@ def input_page(request):
         context = {"message": "Invalid Data Input", "processes": processes, "forms": [saved[1]], "used_process": process}
         return render(request, "input.html", context)
     processes = get_processes()
+    print(processes)
+    processes.remove({'id': 'ChipList', 'name': 'ChipList'})
     context = {"message": "Data Submitted!","processes": processes}
     return render(request, "input.html", context)
 
