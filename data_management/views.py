@@ -208,6 +208,7 @@ def save_form(processes, request):
                 chip_owner=request.user, PlasmaEtch_step_time=timezone.now()
             )
             new_model.save()
+            print(new_model)
     return "Done"
 
 def parse_forms(used_processes, request):
