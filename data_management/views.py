@@ -18,6 +18,8 @@ from data_management.forms import LoginForm, RegisterForm, ChipListSearchForm, A
 from data_management.models import AluminumEtch, AluminumEvaporation, ChipList, Deposition, OxideEtch, Patterning, PlasmaClean, PlasmaEtch
 from data_management.forms import AluminumEtchSearchForm, AluminumEvaporationSearchForm, DepositionSearchForm, OxideEtchSearchForm, PatterningSearchForm, PlasmaCleanSearchForm, PlasmaEtchSearchForm
 
+import csv
+
 def get_processes():
     processes = []
     with open('headers.json') as json_file:
@@ -371,6 +373,18 @@ def filter_form(input_dict):
     print("qLIST", q_list[0])
     return q_list
 
+def csv_output(query_list):
+    for i in query_list:
+        with open('my_file.csv', 'w') as file:
+            write = csv.writer(file)
+            # write.writerow(fields)
+            print(i)
+            write.writerows(i.values())
+            write.writerows(i.values_list())
+    
+    return 
+    
+
 @login_required
 def start_page(request):
     context = {"message": "Welcome to the Hacker Fab Database"}
@@ -429,8 +443,10 @@ def search_page(request):
         context = {"message": "Invalid Data Input", "processes": processes, "forms": parsed[1], "used_process": used_processes}
         return render(request, "search.html", context)
     
-    output = filter_form(parsed[0])
-    print(output)
+    query_output = filter_form(parsed[0])
+    print(query_output)
+    
+    csv_output(query_output)
     
     # template = loader.get_template('template.html')
     # return template.render(context, "template.html", request)
