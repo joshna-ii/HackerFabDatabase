@@ -382,7 +382,13 @@ def csv_output(query_list):
             write.writerows(i.values())
             write.writerows(i.values_list())
     
-    return 
+    file = open('my_file.csv')
+    print(file)
+    print(type(file))
+    response = HttpResponse(file, content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename=webscraping_dataset.csv'
+
+    return response
     
 
 @login_required
@@ -446,7 +452,7 @@ def search_page(request):
     query_output = filter_form(parsed[0])
     print(query_output)
     
-    csv_output(query_output)
+    return csv_output(query_output)
     
     # template = loader.get_template('template.html')
     # return template.render(context, "template.html", request)
