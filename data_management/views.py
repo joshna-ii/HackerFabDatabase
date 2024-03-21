@@ -374,9 +374,9 @@ def filter_form(input_dict):
     return q_list
 
 def csv_output(query_list):
-    for i in query_list:
-        with open('my_file.csv', 'w') as file:
-            write = csv.writer(file)
+    with open('my_file.csv', 'w') as file:
+        write = csv.writer(file)
+        for i in query_list:
             # write.writerow(fields)
             print(i)
             write.writerows(i.values())
