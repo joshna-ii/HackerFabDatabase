@@ -9,8 +9,6 @@ class AluminumEtchSearchForm(forms.ModelForm):
         model = AluminumEtch
         exclude = (
             'AluminumEtch_metrology_link',
-            'chip_owner',
-            'chip_number',
             'picture',
             'content_type',
         )
@@ -23,8 +21,6 @@ class AluminumEvaporationSearchForm(forms.ModelForm):
         model = AluminumEvaporation
         exclude = (
             'AluminumEvaporation_metrology_link',
-            'chip_owner',
-            'chip_number',
             'picture',
             'content_type',
         )
@@ -44,8 +40,6 @@ class DepositionSearchForm(forms.ModelForm):
         model = Deposition
         exclude = (
             'Deposition_metrology_link',
-            'chip_owner',
-            'chip_number',
             'picture',
             'content_type',
         )
@@ -58,8 +52,6 @@ class OxideEtchSearchForm(forms.ModelForm):
         model = OxideEtch
         exclude = (
             'OxideEtch_metrology_link',
-            'chip_owner',
-            'chip_number',
             'picture',
             'content_type',
         )
@@ -72,8 +64,6 @@ class PatterningSearchForm(forms.ModelForm):
         model = Patterning
         exclude = (
             'Patterning_metrology_link',
-            'chip_owner',
-            'chip_number',
             'picture',
             'content_type',
         )
@@ -86,8 +76,6 @@ class PlasmaCleanSearchForm(forms.ModelForm):
         model = PlasmaClean
         exclude = (
             'PlasmaClean_metrology_link',
-            'chip_owner',
-            'chip_number',
             'picture',
             'content_type',
         )
@@ -100,8 +88,6 @@ class PlasmaEtchSearchForm(forms.ModelForm):
         model = PlasmaEtch
         exclude = (
             'PlasmaEtch_metrology_link',
-            'chip_owner',
-            'chip_number',
             'picture',
             'content_type',
         )

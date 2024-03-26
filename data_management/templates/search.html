@@ -7,6 +7,11 @@
     <title>Hacker Fab</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'data_management.css' %}">
+    <style>
+      table, th, td {
+        border:1px solid black;
+      }
+      </style>
 </head>
 <body>
     <form action="search" method="POST">
@@ -21,7 +26,29 @@
     </form>
 
     {% if link_id %}
-      <a href="{% url 'csv_output' link_id %}"> Click to Download CSV</a>
+      <div class="csv"> 
+        <a href="{% url 'csv_output' link_id %}"> Click to Download CSV</a>
+      </div>
+
+      <table style="width:100%">
+      {% for process_info in output %}
+        {% for column_name, value in process_info.items %}
+          {% if column_name == "picture" %}
+            <tr>
+              <th> {{ column_name }} </th>
+              <td> 
+                {{process_info.chip_number_id}}
+              </td>
+          </tr>
+          {% else %}
+            <tr>
+                <th> {{ column_name }} </th>
+                <td> {{ value }} </td>
+            </tr>
+          {% endif %}
+        {% endfor %}
+      {% endfor %}
+    </table>
     {% endif %}
     
     {% if used_process %}

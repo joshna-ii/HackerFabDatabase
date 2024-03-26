@@ -13,8 +13,8 @@ class ChipList(models.Model):
     chip_owner    = models.ForeignKey(User, on_delete=models.PROTECT, blank=True)
     creation_time = models.DateTimeField(blank=True)
     notes = models.CharField(max_length=400, blank=True, null=True)  # This field type is a guess.
-    IVCurves_dict_key_is_Vg_value_is_array_of_Id = models.CharField(max_length=400, blank=True, null=True)
-    IVCurves_dict_key_is_Vg_value_is_array_of_Vd = models.CharField(max_length=400, blank=True, null=True)
+    IVCurrrents_CSV = models.FileField(blank=True)
+    IVVoltages_CSV = models.FileField(blank=True)
 
 class ChipListSearch(models.Model):
     chip_number = models.IntegerField(blank=True)

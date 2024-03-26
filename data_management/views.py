@@ -419,8 +419,8 @@ def chip_page(request):
         context['creation_time'] = chip.creation_time
         context['chip_owner'] = chip.chip_owner
         context['chip_number'] = chip.chip_number
-        context['IVCurves_dict_key_is_Vg_value_is_array_of_Id'] = ChipListForm(initial={'IVCurves_dict_key_is_Vg_value_is_array_of_Id': chip.IVCurves_dict_key_is_Vg_value_is_array_of_Id})
-        context['IVCurves_dict_key_is_Vg_value_is_array_of_Vd'] = ChipListForm(initial={'noIVCurves_dict_key_is_Vg_value_is_array_of_Vdtes': chip.IVCurves_dict_key_is_Vg_value_is_array_of_Vd})
+        context['IVCurrrents_CSV'] = ChipListForm(initial={'IVCurrrents_CSV': chip.IVCurrrents_CSV})
+        context['IVVoltages_CSV'] = ChipListForm(initial={'IVVoltages_CSV': chip.IVVoltages_CSV})
         context['form'] = ChipListForm(initial={'notes': chip.notes})
         return render(request, 'chip.html', context)
     
@@ -430,14 +430,14 @@ def chip_page(request):
         return render(request, 'chip.html', context)
     
     chip.notes = form.cleaned_data['notes']
-    chip.IVCurves_dict_key_is_Vg_value_is_array_of_Id = form.cleaned_data['IVCurves_dict_key_is_Vg_value_is_array_of_Id']
-    chip.IVCurves_dict_key_is_Vg_value_is_array_of_Vd = form.cleaned_data['IVCurves_dict_key_is_Vg_value_is_array_of_Vd']
+    chip.IVCurrrents_CSV = form.cleaned_data['IVCurrrents_CSV']
+    chip.IVVoltages_CSV = form.cleaned_data['IVVoltages_CSV']
     chip.save()
     context['creation_time'] = chip.creation_time
     context['chip_owner'] = chip.chip_owner
     context['chip_number'] = chip.chip_number
-    context['IVCurves_dict_key_is_Vg_value_is_array_of_Id'] = chip.IVCurves_dict_key_is_Vg_value_is_array_of_Id
-    context['IVCurves_dict_key_is_Vg_value_is_array_of_Vd'] = chip.IVCurves_dict_key_is_Vg_value_is_array_of_Vd
+    context['IVCurrrents_CSV'] = chip.IVCurrrents_CSV
+    context['IVVoltages_CSV'] = chip.IVVoltages_CSV
     context['form'] = ChipListForm(initial={'notes': chip.notes})
     return render(request, "chip.html", context)
 
@@ -454,19 +454,21 @@ def search_page(request):
         return render(request, "search.html", context)
     used_processes = request.POST['used_process']
     parsed = parse_forms(used_processes, request)
-    print("PARSED:", parsed)
     if parsed[0] == "Invalid":
         processes = get_processes()
         context = {"message": "Invalid Data Input", "processes": processes, "forms": parsed[1], "used_process": used_processes}
         return render(request, "search.html", context)
     
     query_output = filter_form(parsed[0])
-    print(query_output)
     
     csv_link_id = create_csv(query_output)
+    array_of_dicts = []
+    for i in query_output:
+        for x in i.values():
+            array_of_dicts.append(x)
 
     processes = get_processes()
-    context = {"message": "Data Searched!","processes": processes,"link_id":csv_link_id}
+    context = {"message": "Data Searched!","processes": processes,"link_id":csv_link_id,"output":array_of_dicts}
     return render(request, "search.html", context)
 
 @login_required
