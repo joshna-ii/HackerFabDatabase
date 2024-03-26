@@ -11,6 +11,8 @@ class AluminumEtchSearchForm(forms.ModelForm):
             'AluminumEtch_metrology_link',
             'chip_owner',
             'chip_number',
+            'picture',
+            'content_type',
         )
         labels = {
             'chip_owner': "Enter Username",
@@ -23,6 +25,8 @@ class AluminumEvaporationSearchForm(forms.ModelForm):
             'AluminumEvaporation_metrology_link',
             'chip_owner',
             'chip_number',
+            'picture',
+            'content_type',
         )
         labels = {
             'chip_owner': "Enter Username",
@@ -42,6 +46,8 @@ class DepositionSearchForm(forms.ModelForm):
             'Deposition_metrology_link',
             'chip_owner',
             'chip_number',
+            'picture',
+            'content_type',
         )
         labels = {
             'chip_owner': "Enter Username",
@@ -54,6 +60,8 @@ class OxideEtchSearchForm(forms.ModelForm):
             'OxideEtch_metrology_link',
             'chip_owner',
             'chip_number',
+            'picture',
+            'content_type',
         )
         labels = {
             'chip_owner': "Enter Username",
@@ -66,6 +74,8 @@ class PatterningSearchForm(forms.ModelForm):
             'Patterning_metrology_link',
             'chip_owner',
             'chip_number',
+            'picture',
+            'content_type',
         )
         labels = {
             'chip_owner': "Enter Username",
@@ -78,6 +88,8 @@ class PlasmaCleanSearchForm(forms.ModelForm):
             'PlasmaClean_metrology_link',
             'chip_owner',
             'chip_number',
+            'picture',
+            'content_type',
         )
         labels = {
             'chip_owner': "Enter Username",
@@ -90,6 +102,8 @@ class PlasmaEtchSearchForm(forms.ModelForm):
             'PlasmaEtch_metrology_link',
             'chip_owner',
             'chip_number',
+            'picture',
+            'content_type',
         )
         labels = {
             'chip_owner': "Enter Username",
@@ -101,6 +115,7 @@ class AluminumEtchInputForm(forms.ModelForm):
         exclude = (
             'chip_owner',
             'AluminumEtch_step_time',
+            'content_type',
         )
 
 class AluminumEvaporationInputForm(forms.ModelForm):
@@ -109,6 +124,7 @@ class AluminumEvaporationInputForm(forms.ModelForm):
         exclude = (
             'chip_owner',
             'AluminumEvaporation_step_time',
+            'content_type',
         )
 
 class ChipListForm(forms.ModelForm):
@@ -126,6 +142,7 @@ class DepositionInputForm(forms.ModelForm):
         exclude = (
             'chip_owner',
             'Deposition_step_time',
+            'content_type',
         )
 
 class OxideEtchInputForm(forms.ModelForm):
@@ -134,6 +151,7 @@ class OxideEtchInputForm(forms.ModelForm):
         exclude = (
             'chip_owner',
             'OxideEtch_step_time',
+            'content_type',
         )
 
 class PatterningInputForm(forms.ModelForm):
@@ -142,6 +160,7 @@ class PatterningInputForm(forms.ModelForm):
         exclude = (
             'chip_owner',
             'Patterning_step_time',
+            'content_type',
         )
 
 class PlasmaCleanInputForm(forms.ModelForm):
@@ -150,6 +169,7 @@ class PlasmaCleanInputForm(forms.ModelForm):
         exclude = (
             'chip_owner',
             'PlasmaClean_step_time',
+            'content_type',
         )
 
 class PlasmaEtchInputForm(forms.ModelForm):
@@ -158,6 +178,7 @@ class PlasmaEtchInputForm(forms.ModelForm):
         exclude = (
             'chip_owner',
             'PlasmaEtch_step_time',
+            'content_type',
         )
 
 

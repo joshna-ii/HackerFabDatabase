@@ -74,7 +74,17 @@ def get_search_meas(processes):
         f = {"name": f'{process}', "form": form}
         forms.append(f)
     return forms
+'''
+@login_required
+def get_photo(request, user_id):
+    p = get_object_or_404(Profile, id=user_id) #TODO
+    # Maybe we don't need this check as form validation requires a picture be uploaded.
+    # But someone could have delete the picture leaving the DB with a bad references.
+    if not p.picture:
+        raise Http404
 
+    return HttpResponse(p.picture, content_type=p.content_type)
+'''
 def save_form(processes, request):
     for process in processes:
         if process == "AluminumEtch":
@@ -93,7 +103,6 @@ def save_form(processes, request):
                 AluminumEtch_notes=request.POST['AluminumEtch_notes'], 
                 chip_owner=request.user, AluminumEtch_step_time=timezone.now()
             )
-            new_model.save()
         if process == "AluminumEvaporation":
             form = AluminumEvaporationInputForm(request.POST, request.FILES)
             if not form.is_valid():
@@ -111,7 +120,6 @@ def save_form(processes, request):
                 AluminumEvaporation_notes=request.POST['AluminumEvaporation_notes'], 
                 chip_owner=request.user, AluminumEvaporation_step_time=timezone.now()
             )
-            new_model.save()
         if process == "Deposition":
             form = DepositionInputForm(request.POST, request.FILES)
             if not form.is_valid():
@@ -136,7 +144,6 @@ def save_form(processes, request):
                 Deposition_notes=request.POST['Deposition_notes'], 
                 chip_owner=request.user, Deposition_step_time=timezone.now()
             )
-            new_model.save()
         if process == "OxideEtch":
             form = OxideEtchInputForm(request.POST, request.FILES)
             if not form.is_valid():
@@ -150,7 +157,6 @@ def save_form(processes, request):
                 OxideEtch_metrology_link=request.POST['OxideEtch_metrology_link'], 
                 OxideEtch_notes=request.POST['OxideEtch_notes'], 
                 chip_owner=request.user, OxideEtch_step_time=timezone.now())
-            new_model.save()
         if process == "Patterning":
             form = PatterningInputForm(request.POST, request.FILES)
             if not form.is_valid():
@@ -179,7 +185,6 @@ def save_form(processes, request):
                 Patterning_notes=request.POST['Patterning_notes'], 
                 chip_owner=request.user, Patterning_step_time=timezone.now()
             )
-            new_model.save()
         if process == "PlasmaClean":
             form = PlasmaCleanInputForm(request.POST, request.FILES)
             if not form.is_valid():
@@ -194,7 +199,6 @@ def save_form(processes, request):
                 PlasmaClean_notes=request.POST['PlasmaClean_notes'], 
                 chip_owner=request.user, PlasmaClean_step_time=timezone.now()
             )
-            new_model.save()
         if process == "PlasmaEtch":
             form = PlasmaEtchInputForm(request.POST, request.FILES)
             if not form.is_valid():
@@ -210,8 +214,11 @@ def save_form(processes, request):
                 PlasmaEtch_notes=request.POST['PlasmaEtch_notes'], 
                 chip_owner=request.user, PlasmaEtch_step_time=timezone.now()
             )
-            new_model.save()
-            print(new_model)
+        new_model.save()
+        if form.cleaned_data['picture'] != None:
+            new_model.picture = form.cleaned_data['picture']
+            new_model.content_type = form.cleaned_data['picture'].content_type
+        new_model.save()
     return "Done"
 
 def parse_forms(used_processes, request):
@@ -366,12 +373,6 @@ def filter_form(input_dict):
             print(query)
             q_obj = PlasmaEtch.objects.filter(query)
             q_list.append(q_obj)
-            
-    
-    # print(processes)
-    # joined = ChipList.objects.select_related("chip_owner")
-    #.union(PlasmaEtch, all=True).filter(query)
-    print("qLIST", q_list[0])
     return q_list
 
 def create_csv(query_list):
@@ -418,6 +419,8 @@ def chip_page(request):
         context['creation_time'] = chip.creation_time
         context['chip_owner'] = chip.chip_owner
         context['chip_number'] = chip.chip_number
+        context['IVCurves_dict_key_is_Vg_value_is_array_of_Id'] = ChipListForm(initial={'IVCurves_dict_key_is_Vg_value_is_array_of_Id': chip.IVCurves_dict_key_is_Vg_value_is_array_of_Id})
+        context['IVCurves_dict_key_is_Vg_value_is_array_of_Vd'] = ChipListForm(initial={'noIVCurves_dict_key_is_Vg_value_is_array_of_Vdtes': chip.IVCurves_dict_key_is_Vg_value_is_array_of_Vd})
         context['form'] = ChipListForm(initial={'notes': chip.notes})
         return render(request, 'chip.html', context)
     
@@ -427,10 +430,14 @@ def chip_page(request):
         return render(request, 'chip.html', context)
     
     chip.notes = form.cleaned_data['notes']
+    chip.IVCurves_dict_key_is_Vg_value_is_array_of_Id = form.cleaned_data['IVCurves_dict_key_is_Vg_value_is_array_of_Id']
+    chip.IVCurves_dict_key_is_Vg_value_is_array_of_Vd = form.cleaned_data['IVCurves_dict_key_is_Vg_value_is_array_of_Vd']
     chip.save()
     context['creation_time'] = chip.creation_time
     context['chip_owner'] = chip.chip_owner
     context['chip_number'] = chip.chip_number
+    context['IVCurves_dict_key_is_Vg_value_is_array_of_Id'] = chip.IVCurves_dict_key_is_Vg_value_is_array_of_Id
+    context['IVCurves_dict_key_is_Vg_value_is_array_of_Vd'] = chip.IVCurves_dict_key_is_Vg_value_is_array_of_Vd
     context['form'] = ChipListForm(initial={'notes': chip.notes})
     return render(request, "chip.html", context)
 

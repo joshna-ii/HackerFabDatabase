@@ -13,6 +13,8 @@ class ChipList(models.Model):
     chip_owner    = models.ForeignKey(User, on_delete=models.PROTECT, blank=True)
     creation_time = models.DateTimeField(blank=True)
     notes = models.CharField(max_length=400, blank=True, null=True)  # This field type is a guess.
+    IVCurves_dict_key_is_Vg_value_is_array_of_Id = models.CharField(max_length=400, blank=True, null=True)
+    IVCurves_dict_key_is_Vg_value_is_array_of_Vd = models.CharField(max_length=400, blank=True, null=True)
 
 class ChipListSearch(models.Model):
     chip_number = models.IntegerField(blank=True)
@@ -23,6 +25,8 @@ class ChipListSearch(models.Model):
 class AluminumEtch(models.Model):
     chip_number = models.ForeignKey(ChipList, on_delete=models.PROTECT, blank=True)
     chip_owner    = models.ForeignKey(User, on_delete=models.PROTECT, blank=True)
+    picture = models.FileField(blank=True)
+    content_type = models.CharField(max_length=50)
     AluminumEtch_step_time = models.DateTimeField(blank=True)
     AluminumEtch_temp = models.CharField(max_length=400, blank=True, null=True)
     AluminumEtch_time = models.CharField(max_length=400, blank=True, null=True)
@@ -36,6 +40,8 @@ class AluminumEtch(models.Model):
 class AluminumEvaporation(models.Model):
     chip_number = models.ForeignKey(ChipList, on_delete=models.PROTECT, blank=True)
     chip_owner    = models.ForeignKey(User, on_delete=models.PROTECT, blank=True)
+    picture = models.FileField(blank=True)
+    content_type = models.CharField(max_length=50)
     AluminumEvaporation_step_time = models.DateTimeField(blank=True)
     AluminumEvaporation_temp = models.CharField(max_length=400, blank=True, null=True)  # This field type is a guess.
     AluminumEvaporation_time = models.CharField(max_length=400, blank=True, null=True)  # This field type is a guess.
@@ -50,6 +56,8 @@ class AluminumEvaporation(models.Model):
 class Deposition(models.Model):
     chip_number = models.ForeignKey(ChipList, on_delete=models.PROTECT, blank=True)
     chip_owner    = models.ForeignKey(User, on_delete=models.PROTECT, blank=True)
+    picture = models.FileField(blank=True)
+    content_type = models.CharField(max_length=50)
     Deposition_step_time = models.DateTimeField(blank=True)
     Deposition_glass_type = models.CharField(max_length=400, blank=True, null=True)
     Deposition_cleaning_step = models.CharField(max_length=400, blank=True, null=True)  # This field type is a guess.
@@ -71,6 +79,8 @@ class Deposition(models.Model):
 class OxideEtch(models.Model):
     chip_number = models.ForeignKey(ChipList, on_delete=models.PROTECT, blank=True)
     chip_owner    = models.ForeignKey(User, on_delete=models.PROTECT, blank=True)
+    picture = models.FileField(blank=True)
+    content_type = models.CharField(max_length=50)
     OxideEtch_step_time = models.DateTimeField(blank=True)
     OxideEtch_max_temp_glass_reached = models.CharField(max_length=400, blank=True, null=True)
     OxideEtch_time = models.CharField(max_length=400, blank=True, null=True)
@@ -82,6 +92,8 @@ class OxideEtch(models.Model):
 class Patterning(models.Model):
     chip_number = models.ForeignKey(ChipList, on_delete=models.PROTECT, blank=True)
     chip_owner    = models.ForeignKey(User, on_delete=models.PROTECT, blank=True)
+    picture = models.FileField(blank=True)
+    content_type = models.CharField(max_length=50)
     Patterning_step_time = models.DateTimeField(blank=True)
     Patterning_underlying_material = models.CharField(max_length=400, blank=True, null=True)  # This field type is a guess.
     Patterning_hdms_prebake_temp = models.CharField(max_length=400, blank=True, null=True)
@@ -107,6 +119,8 @@ class Patterning(models.Model):
 class PlasmaClean(models.Model):
     chip_number = models.ForeignKey(ChipList, on_delete=models.PROTECT, blank=True)
     chip_owner    = models.ForeignKey(User, on_delete=models.PROTECT, blank=True)
+    picture = models.FileField(blank=True)
+    content_type = models.CharField(max_length=50)
     PlasmaClean_step_time = models.DateTimeField(blank=True)
     PlasmaClean_o2_flow = models.CharField(max_length=400, blank=True, null=True)  # This field type is a guess.
     PlasmaClean_rf_power = models.CharField(max_length=400, blank=True, null=True)  # This field type is a guess.
@@ -118,6 +132,8 @@ class PlasmaClean(models.Model):
 class PlasmaEtch(models.Model):
     chip_number = models.ForeignKey(ChipList, on_delete=models.PROTECT, blank=True)
     chip_owner    = models.ForeignKey(User, on_delete=models.PROTECT, blank=True)
+    picture = models.FileField(blank=True)
+    content_type = models.CharField(max_length=50)
     PlasmaEtch_step_time = models.DateTimeField(blank=True)
     PlasmaEtch_o2_flow = models.CharField(max_length=400, blank=True, null=True)  # This field type is a guess.
     PlasmaEtch_sf6_flow = models.CharField(max_length=400, blank=True, null=True)  # This field type is a guess.
