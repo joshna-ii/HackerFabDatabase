@@ -28,4 +28,5 @@ urlpatterns = [
     path('input', views.input_page, name="input"),
     path('search', views.search_page, name="search"),
     path('chip', views.chip_page, name="chip"),
+    path('csv_output/<int:csv_id>/$', views.csv_output, name='csv_output'),
 ]

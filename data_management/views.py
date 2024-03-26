@@ -19,6 +19,7 @@ from data_management.models import AluminumEtch, AluminumEvaporation, ChipList, 
 from data_management.forms import AluminumEtchSearchForm, AluminumEvaporationSearchForm, DepositionSearchForm, OxideEtchSearchForm, PatterningSearchForm, PlasmaCleanSearchForm, PlasmaEtchSearchForm
 
 import csv
+import os
 
 def get_processes():
     processes = []
@@ -373,21 +374,24 @@ def filter_form(input_dict):
     print("qLIST", q_list[0])
     return q_list
 
-def csv_output(query_list):
-    with open('my_file.csv', 'w') as file:
-        write = csv.writer(file)
-        for i in query_list:
+def create_csv(query_list):
+    _, _, files = next(os.walk("csv_files"))
+    file_count = len(files)+1
+    for i in query_list:
+        with open(f'search{file_count}.csv', 'w') as file:
+            write = csv.writer(file)
             # write.writerow(fields)
             print(i)
             write.writerows(i.values())
             write.writerows(i.values_list())
+    return file_count
     
-    file = open('my_file.csv')
-    print(file)
-    print(type(file))
+@login_required
+def csv_output(request, csv_id):
+    print(csv_id)
+    file = open(f'search{csv_id}.csv')
     response = HttpResponse(file, content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename=webscraping_dataset.csv'
-
     return response
     
 
@@ -452,13 +456,10 @@ def search_page(request):
     query_output = filter_form(parsed[0])
     print(query_output)
     
-    return csv_output(query_output)
-    
-    # template = loader.get_template('template.html')
-    # return template.render(context, "template.html", request)
+    csv_link_id = create_csv(query_output)
 
     processes = get_processes()
-    context = {"message": "Data Searched!","processes": processes}
+    context = {"message": "Data Searched!","processes": processes,"link_id":csv_link_id}
     return render(request, "search.html", context)
 
 @login_required
