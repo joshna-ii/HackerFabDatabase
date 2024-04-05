@@ -20,6 +20,8 @@ from data_management.forms import AluminumEtchSearchForm, AluminumEvaporationSea
 
 import csv
 import os
+import pandas as pd
+import matplotlib.pyplot as plt   # needed for plotting
 
 def get_processes():
     processes = []
@@ -74,17 +76,16 @@ def get_search_meas(processes):
         f = {"name": f'{process}', "form": form}
         forms.append(f)
     return forms
-'''
+
 @login_required
-def get_photo(request, user_id):
-    p = get_object_or_404(Profile, id=user_id) #TODO
-    # Maybe we don't need this check as form validation requires a picture be uploaded.
-    # But someone could have delete the picture leaving the DB with a bad references.
+def get_photo(request, chip_id):
+    p = get_object_or_404(Patterning, id=chip_id)
+    # someone could have delete the picture leaving the DB with a bad references.
     if not p.picture:
         raise Http404
 
     return HttpResponse(p.picture, content_type=p.content_type)
-'''
+
 def save_form(processes, request):
     for process in processes:
         if process == "AluminumEtch":
@@ -428,6 +429,20 @@ def chip_page(request):
     if not form.is_valid():
         context = {'form': form}
         return render(request, 'chip.html', context)
+    
+    currents_csv_name = str(form.cleaned_data['IVCurrrents_CSV'])
+    #voltages_csv_name = str(form.cleaned_data['IVVoltages_CSV'])
+    currents_df = pd.read_csv(currents_csv_name) 
+    #voltages_df = pd.read_csv(voltages_csv_name) 
+    
+    #for (columnName, columnData) in currents_df.iteritems():
+    #    print('Column Name : ', columnName)
+    #    print('Column Contents : ', columnData.values)
+
+    plt.xlabel("Voltage (V_DS) [V]")
+    plt.ylabel("Current (I_D) [A]")
+    #plt.show()
+    #plt.savefig('foo.png')
     
     chip.notes = form.cleaned_data['notes']
     chip.IVCurrrents_CSV = form.cleaned_data['IVCurrrents_CSV']

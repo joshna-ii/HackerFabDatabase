@@ -37,7 +37,7 @@
             <tr>
               <th> {{ column_name }} </th>
               <td> 
-                {{process_info.chip_number_id}}
+                <img src="{% url 'photo' process_info.id %}" width="400" height="300" id="id_user_picture">
               </td>
           </tr>
           {% else %}

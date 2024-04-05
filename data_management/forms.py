@@ -1,5 +1,5 @@
 from django import forms
-
+from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from data_management.models import AluminumEtch, AluminumEvaporation, ChipList, ChipListSearch, Deposition, OxideEtch, Patterning, PlasmaClean, PlasmaEtch
@@ -120,6 +120,8 @@ class ChipListForm(forms.ModelForm):
             'chip_owner',
             'chip_number',
             'creation_time',
+            'picture',
+            'content_type',
         )
 
 class DepositionInputForm(forms.ModelForm):
@@ -141,6 +143,9 @@ class OxideEtchInputForm(forms.ModelForm):
         )
 
 class PatterningInputForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['chip_number'].required = True
     class Meta:
         model = Patterning
         exclude = (
