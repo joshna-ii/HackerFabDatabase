@@ -1,0 +1,9 @@
+db.sqlite3
+./data_management/migrations
+./data_management/__pycache__
+./csvfiles/
+__pycache__/
+**/__pycache__/
+*.py[cod]
+.DS_Store
+**/.DS_Store
