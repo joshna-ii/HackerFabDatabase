@@ -2,7 +2,43 @@ from django import forms
 from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
-from data_management.models import AluminumEtch, AluminumEvaporation, ChipList, ChipListSearch, Deposition, OxideEtch, Patterning, PlasmaClean, PlasmaEtch
+from data_management.models import Profile, IVCurve, AluminumEtch, AluminumEvaporation, ChipList, ChipListSearch, Deposition, OxideEtch, Patterning, PlasmaClean, PlasmaEtch
+
+UNIVERSITY_CHOICES =( 
+    ("CMU", "Carnegie Mellon University"), 
+)
+
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ('text', 'picture')
+        widgets = {
+            'text': forms.Textarea(attrs={'id': 'id_bio_input_text', 'rows': '3'}),
+            'picture': forms.FileInput(attrs={'id': 'id_profile_picture'})
+        }
+        labels = {
+            'text': "",
+            'picture': "Upload Image"
+        }
+
+class IVCurveForm(forms.ModelForm):
+    class Meta:
+        model = IVCurve
+        exclude = (
+            'chip_owner',
+            'device_id',
+            'gate_voltages',
+            'captures'
+        )
+
+    device_id = forms.CharField(max_length=50, required=True, 
+                                widget=forms.TextInput(
+            attrs={"placeholder": "ex. 2b1",}
+        ))
+    gate_voltages = forms.CharField(max_length=500, required=True, 
+                                    widget=forms.TextInput(
+            attrs={"placeholder": "ex. 1, 2, 3, 4, 5",}
+        ))
 
 class AluminumEtchSearchForm(forms.ModelForm):
     class Meta:
@@ -114,6 +150,9 @@ class AluminumEvaporationInputForm(forms.ModelForm):
         )
 
 class ChipListForm(forms.ModelForm):
+    #university = forms.ChoiceField(choices = UNIVERSITY_CHOICES,
+    #                              label="University:", 
+    #                              required=False)
     class Meta:
         model = ChipList
         exclude = (
@@ -122,7 +161,9 @@ class ChipListForm(forms.ModelForm):
             'creation_time',
             'picture',
             'content_type',
+            #'uni'
         )
+
 
 class DepositionInputForm(forms.ModelForm):
     class Meta:

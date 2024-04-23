@@ -8,6 +8,9 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+
+
+
 class ChipList(models.Model):
     chip_number = models.IntegerField(primary_key=True, blank=False)
     chip_owner    = models.ForeignKey(User, on_delete=models.PROTECT, blank=True)
@@ -17,6 +20,14 @@ class ChipList(models.Model):
     IVVoltages_CSV = models.FileField(blank=True)
     picture = models.FileField(blank=True)
     content_type = models.CharField(max_length=50, blank=True)
+    #uni  = models.CharField(blank=True, max_length=300)
+
+class Profile(models.Model):
+    text  = models.CharField(blank=True, max_length=300)
+    user    = models.OneToOneField(User, on_delete=models.PROTECT, related_name="entry_creators")
+    picture = models.FileField(blank=True)
+    content_type = models.CharField(max_length=50)
+    followers = models.ManyToManyField(User, related_name="followers")
 
 class ChipListSearch(models.Model):
     chip_number = models.IntegerField(blank=True)
@@ -24,6 +35,19 @@ class ChipListSearch(models.Model):
     creation_time = models.DateTimeField(blank=True)
     notes = models.CharField(max_length=400, blank=True, null=True)  # This field type is a guess.
 
+class SMU_capture(models.Model):
+    csv_current = models.FileField(blank=True)
+    csv_voltage = models.FileField(blank=True)
+    plot = models.ImageField(blank=True)
+
+class IVCurve(models.Model):
+    chip_number = models.ForeignKey(ChipList, on_delete=models.PROTECT, blank=True)
+    chip_owner    = models.ForeignKey(User, on_delete=models.PROTECT, blank=True)
+    drain_resistance = models.IntegerField(blank=False, default=100)
+    gate_resistance =  models.IntegerField(blank=False, default=100)
+    device_id = models.CharField(max_length=50, blank=False)
+    gate_voltages = models.CharField(max_length=500, blank=False)
+    captures = models.ManyToManyField(SMU_capture)
 class AluminumEtch(models.Model):
     chip_number = models.ForeignKey(ChipList, on_delete=models.PROTECT, blank=True)
     chip_owner    = models.ForeignKey(User, on_delete=models.PROTECT, blank=True)

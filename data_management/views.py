@@ -13,15 +13,46 @@ from django.contrib.auth import authenticate, login, logout
 
 from django.utils import timezone
 from django.db.models import Q
+from PIL import Image
+from io import BytesIO, StringIO
 
-from data_management.forms import LoginForm, RegisterForm, ChipListSearchForm, AluminumEtchInputForm, AluminumEvaporationInputForm, ChipListForm, DepositionInputForm, OxideEtchInputForm, PatterningInputForm, PlasmaCleanInputForm, PlasmaEtchInputForm
-from data_management.models import AluminumEtch, AluminumEvaporation, ChipList, Deposition, OxideEtch, Patterning, PlasmaClean, PlasmaEtch
+from data_management.forms import ProfileForm, IVCurveForm, LoginForm, RegisterForm, ChipListSearchForm, AluminumEtchInputForm, AluminumEvaporationInputForm, ChipListForm, DepositionInputForm, OxideEtchInputForm, PatterningInputForm, PlasmaCleanInputForm, PlasmaEtchInputForm
+from data_management.models import Profile, SMU_capture, IVCurve, AluminumEtch, AluminumEvaporation, ChipList, Deposition, OxideEtch, Patterning, PlasmaClean, PlasmaEtch
 from data_management.forms import AluminumEtchSearchForm, AluminumEvaporationSearchForm, DepositionSearchForm, OxideEtchSearchForm, PatterningSearchForm, PlasmaCleanSearchForm, PlasmaEtchSearchForm
 
-import csv
 import os
 import pandas as pd
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt   # needed for plotting
+plt.switch_backend('Agg') 
+from WF_SDK import device, scope, wavegen   # import instruments
+
+import csv #needed for generating CSV files for graphing later
+import ctypes
+from sys import platform, path    # this is needed to check the OS type and get the PATH
+from os import sep                # OS specific file path separators
+from django.core.files.base import ContentFile
+
+# assign dwf to be used later
+# load the dynamic library, get constants path (the path is OS specific)
+if platform.startswith("win"):
+    # on Windows
+    dwf = ctypes.cdll.dwf
+    constants_path = "C:" + sep + "Program Files (x86)" + sep + "Digilent" + sep + "WaveFormsSDK" + sep + "samples" + sep + "py"
+elif platform.startswith("darwin"):
+    # on macOS
+    lib_path = sep + "Library" + sep + "Frameworks" + sep + "dwf.framework" + sep + "dwf"
+    dwf = ctypes.cdll.LoadLibrary(lib_path)
+    constants_path = sep + "Applications" + sep + "WaveForms.app" + sep + "Contents" + sep + "Resources" + sep + "SDK" + sep + "samples" + sep + "py"
+else:
+    # on Linux
+    dwf = ctypes.cdll.LoadLibrary("libdwf.so")
+    constants_path = sep + "usr" + sep + "share" + sep + "digilent" + sep + "waveforms" + sep + "samples" + sep + "py"
+
+# import constants
+path.append(constants_path)
+
 
 def get_processes():
     processes = []
@@ -402,6 +433,16 @@ def start_page(request):
     context = {"message": "Welcome to the Hacker Fab Database"}
     return render(request, "home.html", context)
 
+def display_chip(request, chip_id):
+    context = {}
+    context["chip_id"] = chip_id
+    chip = get_object_or_404(ChipList, chip_number=chip_id)
+    context["creation_time"] = chip.creation_time
+    context["chip_owner"] = chip.chip_owner
+    context["chip_number"] = chip.chip_number
+    if request.method == 'GET':
+        return render(request, "chipnum.html", context)
+
 @login_required
 def chip_page(request):
     context = {}
@@ -430,9 +471,9 @@ def chip_page(request):
         context = {'form': form}
         return render(request, 'chip.html', context)
     
-    currents_csv_name = str(form.cleaned_data['IVCurrrents_CSV'])
+    #currents_csv_name = str(form.cleaned_data['IVCurrrents_CSV'])
     #voltages_csv_name = str(form.cleaned_data['IVVoltages_CSV'])
-    currents_df = pd.read_csv(currents_csv_name) 
+    #currents_df = pd.read_csv(currents_csv_name) 
     #voltages_df = pd.read_csv(voltages_csv_name) 
     
     #for (columnName, columnData) in currents_df.iteritems():
@@ -455,6 +496,43 @@ def chip_page(request):
     context['IVVoltages_CSV'] = chip.IVVoltages_CSV
     context['form'] = ChipListForm(initial={'notes': chip.notes})
     return render(request, "chip.html", context)
+
+@login_required
+def mypfp_action(request):
+    chips = ChipList.objects.all().filter(chip_owner = request.user)
+    context = {"chips": chips}
+    context['Name'] = f"{request.user.first_name} {request.user.last_name}"
+    profile = Profile.objects.get(id=request.user.id) 
+    context['profile'] = profile
+
+    if request.method == 'GET':
+        context['form'] = ProfileForm(initial={'text': profile.text})
+        return render(request, 'myprofile.html', context)
+    
+    form = ProfileForm(request.POST, request.FILES)
+    if not form.is_valid():
+        context = {'form': form}
+        return render(request, 'myprofile.html', context)
+        
+    if form.cleaned_data['picture'] != None:
+        profile.picture = form.cleaned_data['picture']
+        profile.content_type = form.cleaned_data['picture'].content_type
+    profile.text = form.cleaned_data['text']
+    profile.save()
+    #form.save()
+
+    context['form'] = ProfileForm(initial={'text': profile.text})
+    return render(request, 'myprofile.html', context)
+
+@login_required
+def otherpfp_action(request, user_id): #request is us, user_id is profile to view
+    user = get_object_or_404(User, id=user_id)
+    chips = ChipList.objects.all().filter(chip_owner = user)
+    context = {"chips": chips}
+    context['profile'] = Profile.objects.get(id=user_id)
+    context['loggedin'] = Profile.objects.get(id=request.user.id)
+    context['Name'] = f"{request.user.first_name} {request.user.last_name}"
+    return render(request, 'otherprofile.html', context)
 
 @login_required
 def search_page(request):
@@ -561,6 +639,14 @@ def login_action(request):
     context = {"message": "Succesful Login! Welcome to the Hacker Fab Database"}
     return render(request, 'home.html', context)
 
+def central_action(request):
+    all_entries = ChipList.objects.all()
+    context = {"all_entries": all_entries}
+
+    # Just display the registration form if this is a GET request.
+    if request.method == 'GET':
+        return render(request, 'central.html', context)
+
 @login_required
 def logout_action(request):
     logout(request)
@@ -594,8 +680,114 @@ def register_action(request):
 
     new_user = authenticate(username=form.cleaned_data['username'],
                             password=form.cleaned_data['password'])
+    
+    new_profile = Profile(user=new_user)
+    new_profile.save()
 
     context['Name'] = f"{form.cleaned_data['first_name']} {form.cleaned_data['last_name']}"
     login(request, new_user)
     context = {"message": "Succesful Registration! Welcome to the Hacker Fab Database"}
     return render(request, "home.html", context)
+
+@login_required
+def smu_action(request):
+    context = {}
+
+    if request.method == 'GET':
+        context['form'] = IVCurveForm()
+        return render(request, 'smu.html', context)
+    
+    form = IVCurveForm(request.POST)
+    context['form'] = form
+    
+    if not form.is_valid():
+        return render(request, 'smu.html', context)
+    
+    new_iv = IVCurve(chip_number=form.cleaned_data['chip_number'],
+                     drain_resistance=form.cleaned_data['drain_resistance'],
+                     gate_resistance=form.cleaned_data['gate_resistance'],
+                     device_id=form.cleaned_data['device_id'],
+                     gate_voltages=form.cleaned_data['gate_voltages'],
+                     chip_owner=request.user)
+    new_iv.save()
+
+    calculate_curves(new_iv)
+    
+    return render(request, "smu.html", context)
+
+
+def calculate_curves(IV_curve):
+    drain_resistance = IV_curve.drain_resistance
+    gate_resistance = IV_curve.gate_resistance
+    chip_number = IV_curve.chip_number.chip_number
+    device_id = IV_curve.device_id
+    gate_voltages = IV_curve.gate_voltages
+    # create capture model
+    cap = SMU_capture()
+    # name of csv files
+    filename_currents = f"csvfiles/{chip_number}_{device_id}_currents.csv"
+    filename_voltages = f"csvfiles/{chip_number}_{device_id}_voltages.csv"
+    # connect to the device
+    ad3_data1 = device.open() #open the first analog discovery 3 to measure Id and Vds
+    #ad3_data2 = device.open() #open the second analog discovery 3 to measure Ig and Vds
+    
+    # writing to csv file  
+    for filename in [filename_currents, filename_voltages]:
+        with open(filename, 'w') as csvfile: # opens csv files
+            csvwriter = csv.writer(csvfile)  # creating a csv writer object 
+            csvwriter.writerow(gate_voltages) # writes header row (gate voltages)
+            if filename == filename_currents:
+                cap.csv_current = csvfile
+            else:
+                cap.csv_voltage = csvfile
+    
+    # initialize the scope with default settings
+    scope.open(ad3_data1, sampling_frequency=10e5)
+
+    wavegen.generate(ad3_data1, channel=1, function=wavegen.function.sine, offset=5, frequency=100, amplitude=5) #generation sine waveform to drain
+
+    #set voltage peak to peak input range to 50 V on both channels
+    dwf.FDwfAnalogInChannelRangeSet(ad3_data1.handle, 0, ctypes.c_double(50.0))
+    dwf.FDwfAnalogInChannelRangeSet(ad3_data1.handle, 1, ctypes.c_double(50.0))
+
+    #for VB in body_voltages: #TODO loop through body as well
+    print(gate_voltages)
+    for VG in gate_voltages.split(","):
+        VG = float(VG.replace(" ", ""))
+        wavegen.generate(ad3_data1, channel=2, function=wavegen.function.dc, offset=VG, frequency=10e2, amplitude=1) #generate dc signal to gate voltage at voltage i
+        [drain_voltages, ds_voltages1] = scope.record2(ad3_data1) # get data with first AD3 oscilloscope
+        #[gate_voltages, ds_voltages2] = scope.record2(ad3_data2) # get data with second AD3 oscilloscope
+        drain_currents = []
+        gate_currents = []
+        for i in range(len(drain_voltages)):
+            drain_currents.append(drain_voltages[i]/drain_resistance) # calculate current with ohms law
+            #gate_currents.append(gate_voltages[i]/gate_resistance) # calculate current with ohms law
+        for filename in [filename_currents, filename_voltages]: #outputs currents and voltages to csv TODO add second AD3 data maybe to XLS
+            with open(filename,'a') as csvfile:
+                writer = csv.writer(csvfile)
+                if "current" in filename:
+                    writer.writerow(drain_currents)
+                elif "voltage" in filename:
+                    writer.writerow(ds_voltages1)
+        #plt.plot(ds_voltages1, drain_currents, label = f"Id with Vg = {VG}") #plot curve of Id vs. Vds    
+
+    #plot labels and show
+    plt.legend(loc='upper center')
+    plt.xlabel("Voltage (V_DS) [V]")
+    plt.ylabel("Current [A]")
+    f = BytesIO()
+    plt.savefig(f, format="png")
+    content_file = ContentFile(f.getvalue())
+    cap.plot.save(f'plots/{chip_number}_{device_id}_plot.png', content_file)
+    cap.save()
+
+    #TODO only save data to csv if plot looks good
+
+    # reset the scope
+    scope.close(ad3_data1)
+    
+    # reset the wavegen
+    wavegen.close(ad3_data1)
+    
+    # close the connection
+    device.close(ad3_data1)

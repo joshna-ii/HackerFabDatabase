@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+{% extends "base.html" %}
+{% block content %}
+<head>
+    <meta charset="utf-8">
+    <title> Hacker Fab</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'data_management.css' %}">
+</head>
+<body>
+    <div> SMU </div>
+    <form method="post" action="{% url 'smu' %}">
+        <table>
+            {{form.as_table}}
+        </table>
+        {% csrf_token %}
+        <button id="id_login_button" type="submit">Submit</button>
+    </form>
+</body>
+</html>
+{% endblock %}
