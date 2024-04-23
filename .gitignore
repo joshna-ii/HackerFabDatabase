@@ -1,0 +1,3 @@
+db.sqlite3
+./data_management/migrations
+./data_management/__pycache__
