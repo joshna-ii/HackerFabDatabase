@@ -408,7 +408,7 @@ def filter_form(input_dict):
     return q_list
 
 def create_csv(query_list):
-    _, _, files = next(os.walk("csv_files"))
+    _, _, files = next(os.walk("csvfiles"))
     file_count = len(files)+1
     for i in query_list:
         with open(f'search{file_count}.csv', 'w') as file:
