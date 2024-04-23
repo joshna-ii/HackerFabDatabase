@@ -26,7 +26,7 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt   # needed for plotting
 plt.switch_backend('Agg') 
-from WF_SDK import device, scope, wavegen   # import instruments
+# from WF_SDK import device, scope, wavegen   # import instruments
 
 import csv #needed for generating CSV files for graphing later
 import ctypes
@@ -36,23 +36,23 @@ from django.core.files.base import ContentFile
 
 # assign dwf to be used later
 # load the dynamic library, get constants path (the path is OS specific)
-if platform.startswith("win"):
-    # on Windows
-    dwf = ctypes.cdll.dwf
-    constants_path = "C:" + sep + "Program Files (x86)" + sep + "Digilent" + sep + "WaveFormsSDK" + sep + "samples" + sep + "py"
-elif platform.startswith("darwin"):
-    # on macOS
-    lib_path = sep + "Library" + sep + "Frameworks" + sep + "dwf.framework" + sep + "dwf"
-    dwf = ctypes.cdll.LoadLibrary(lib_path)
-    constants_path = sep + "Applications" + sep + "WaveForms.app" + sep + "Contents" + sep + "Resources" + sep + "SDK" + sep + "samples" + sep + "py"
-else:
-    # on Linux
-    dwf = ctypes.cdll.LoadLibrary("libdwf.so")
-    constants_path = sep + "usr" + sep + "share" + sep + "digilent" + sep + "waveforms" + sep + "samples" + sep + "py"
-
-# import constants
-path.append(constants_path)
-
+# if platform.startswith("win"):
+#     # on Windows
+#     dwf = ctypes.cdll.dwf
+#     constants_path = "C:" + sep + "Program Files (x86)" + sep + "Digilent" + sep + "WaveFormsSDK" + sep + "samples" + sep + "py"
+# elif platform.startswith("darwin"):
+#     # on macOS
+#     lib_path = sep + "Library" + sep + "Frameworks" + sep + "dwf.framework" + sep + "dwf"
+#     dwf = ctypes.cdll.LoadLibrary(lib_path)
+#     constants_path = sep + "Applications" + sep + "WaveForms.app" + sep + "Contents" + sep + "Resources" + sep + "SDK" + sep + "samples" + sep + "py"
+# else:
+#     # on Linux
+#     dwf = ctypes.cdll.LoadLibrary("libdwf.so")
+#     constants_path = sep + "usr" + sep + "share" + sep + "digilent" + sep + "waveforms" + sep + "samples" + sep + "py"
+# 
+# # import constants
+# path.append(constants_path)
+# 
 
 def get_processes():
     processes = []
@@ -354,56 +354,56 @@ def filter_form(input_dict):
             for j in input_dict[proc]:
                 query &= Q((j[0], j[1]))
             print(query)
-            q_obj = ChipList.objects.filter(query)
+            q_obj = ChipList.objects.filter(query).order_by('creation_time')
             q_list.append(q_obj)
         if proc == "AluminumEtch":
             query = Q()
             for j in input_dict[proc]:
                 query &= Q((j[0], j[1]))
             print(query)
-            q_obj = AluminumEtch.objects.filter(query)
+            q_obj = AluminumEtch.objects.filter(query).order_by('{0}_step_time'.format(proc))
             q_list.append(q_obj)
         if proc == "AluminumEvaporation":
             query = Q()
             for j in input_dict[proc]:
                 query &= Q((j[0], j[1]))
             print(query)
-            q_obj = AluminumEvaporation.objects.filter(query)
+            q_obj = AluminumEvaporation.objects.filter(query).order_by('{0}_step_time'.format(proc))
             q_list.append(q_obj)
         if proc == "Deposition":
             query = Q()
             for j in input_dict[proc]:
                 query &= Q((j[0], j[1]))
             print(query)
-            q_obj = Deposition.objects.filter(query)
+            q_obj = Deposition.objects.filter(query).order_by('{0}_step_time'.format(proc))
             q_list.append(q_obj)
         if proc == "OxideEtch":
             query = Q()
             for j in input_dict[proc]:
                 query &= Q((j[0], j[1]))
             print(query)
-            q_obj = OxideEtch.objects.filter(query)
+            q_obj = OxideEtch.objects.filter(query).order_by('{0}_step_time'.format(proc))
             q_list.append(q_obj)
         if proc == "Patterning":
             query = Q()
             for j in input_dict[proc]:
                 query &= Q((j[0], j[1]))
             print(query)
-            q_obj = Patterning.objects.filter(query)
+            q_obj = Patterning.objects.filter(query).order_by('{0}_step_time'.format(proc))
             q_list.append(q_obj)
         if proc == "PlasmaClean":
             query = Q()
             for j in input_dict[proc]:
                 query &= Q((j[0], j[1]))
             print(query)
-            q_obj = PlasmaClean.objects.filter(query)
+            q_obj = PlasmaClean.objects.filter(query).order_by('{0}_step_time'.format(proc))
             q_list.append(q_obj)
         if proc == "PlasmaEtch":
             query = Q()
             for j in input_dict[proc]:
                 query &= Q((j[0], j[1]))
             print(query)
-            q_obj = PlasmaEtch.objects.filter(query)
+            q_obj = PlasmaEtch.objects.filter(query).order_by('{0}_step_time'.format(proc))
             q_list.append(q_obj)
     return q_list
 
