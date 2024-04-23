@@ -499,7 +499,7 @@ def chip_page(request):
 
 @login_required
 def mypfp_action(request):
-    chips = ChipList.objects.all().filter(chip_owner = request.user)
+    chips = ChipList.objects.all().filter(chip_owner = request.user).order_by('-creation_time')
     context = {"chips": chips}
     context['Name'] = f"{request.user.first_name} {request.user.last_name}"
     profile = Profile.objects.get(id=request.user.id) 
@@ -527,7 +527,7 @@ def mypfp_action(request):
 @login_required
 def otherpfp_action(request, user_id): #request is us, user_id is profile to view
     user = get_object_or_404(User, id=user_id)
-    chips = ChipList.objects.all().filter(chip_owner = user)
+    chips = ChipList.objects.all().filter(chip_owner = user).order_by('-creation_time')
     context = {"chips": chips}
     context['profile'] = Profile.objects.get(id=user_id)
     context['loggedin'] = Profile.objects.get(id=request.user.id)
@@ -640,7 +640,7 @@ def login_action(request):
     return render(request, 'home.html', context)
 
 def central_action(request):
-    all_entries = ChipList.objects.all()
+    all_entries = ChipList.objects.all().order_by('-creation_time')
     context = {"all_entries": all_entries}
 
     # Just display the registration form if this is a GET request.
