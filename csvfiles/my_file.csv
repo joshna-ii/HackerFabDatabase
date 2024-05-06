@@ -1,4 +1,0 @@
-id,chip_number_id,chip_owner_id,Patterning_step_time,Patterning_underlying_material,Patterning_hdms_prebake_temp,Patterning_hdms_prebake_time,Patterning_hdms_spin_rpm,Patterning_hdms_spin_time,Patterning_hdms_bake_temp,Patterning_hdms_bake_time,Patterning_photoresist_spin_rpm,Patterning_photoresist_spin_time,Patterning_photoresist_bake_temp,Patterning_photoresist_bake_time,Patterning_exposure_pattern,Patterning_exposure_time,Patterning_develop_time,Patterning_metric_pattern_quality,Patterning_metric_leftover_photoresist,Patterning_metric_missing_photoresist,Patterning_metric_contaminants,Patterning_metrology_link,Patterning_notes
-2,2,1,2024-02-28 06:15:21.569395+00:00,p504,1,2,3,4,1,12,2,2,2,2,2,2,2,,,,,,NONE
-id,chip_number_id,chip_owner_id,OxideEtch_step_time,OxideEtch_max_temp_glass_reached,OxideEtch_time,OxideEtch_temp,OxideEtch_metric_oxide_etch_depth,OxideEtch_metrology_link,OxideEtch_notes
-1,2,1,2024-03-21 22:06:40.245434+00:00,9001,1,1,1,none,none
