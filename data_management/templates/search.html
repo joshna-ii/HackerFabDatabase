@@ -37,14 +37,16 @@
             <tr>
               <th> {{ column_name }} </th>
               <td> 
-                <img src="{% url 'photo' process_info.id %}" width="400" height="300" id="id_user_picture">
+                <img src="{% url 'photo' process_info.process process_info.id%}" width="400" height="300" id="id_user_picture">
               </td>
           </tr>
           {% else %}
-            <tr>
-                <th> {{ column_name }} </th>
-                <td> {{ value }} </td>
-            </tr>
+            {% if column_name != "process" %}
+              <tr>
+                  <th> {{ column_name }} </th>
+                  <td> {{ value }} </td>
+              </tr>
+            {% endif %}
           {% endif %}
         {% endfor %}
       {% endfor %}

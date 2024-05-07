@@ -18,7 +18,7 @@
         {% load static %}
         <img src="{% static 'cmu.jpg' %}" width="400" height="300" id="id_user_picture">
     {% else %}
-        <img src="{% url 'photo' profile.user_id %}" id="id_user_picture">
+        <img src="{% url 'photo' 'Profile' profile.user_id %}" id="id_user_picture">
     {% endif %}
 
     <div id="id_user_bio">

@@ -17,7 +17,7 @@
     {% if not profile.picture %}
         <img src="{% static 'cmu.jpg' %}" width="400" height="300" id="id_user_picture">
     {% else %}
-        <img src="{% url 'photo' request.user.id %}" width="400" height="300" id="id_user_picture">
+        <img src="{% url 'photo' 'Profile' request.user.id %}" width="400" height="300" id="id_user_picture">
     {% endif %}
 
     <form action="{% url 'mypfp' %}" method=POST enctype="multipart/form-data">

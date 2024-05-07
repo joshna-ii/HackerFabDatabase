@@ -17,9 +17,6 @@
             <a href="{% url 'search' %}" id="id_nav_follower_stream">
                 <button>Search</button>
             </a>
-            <a href="{% url 'smu' %}" id="id_smu_page">
-                <button>SMU</button>
-            </a>
             <a href="{% url 'logout' %}" id="id_nav_logout">
                 <button>Logout</button>
             </a>
@@ -30,7 +27,7 @@
                 <button>Gitbook</button>
             </a>
             <a href="{% url 'mypfp' %}" id="id_nav_profile">
-                <button>request.user.first_name request.user.last_name</button>
+                <button>{{request.user.first_name}} {{request.user.last_name}}</button>
             </a>
         </div>
 	</head>

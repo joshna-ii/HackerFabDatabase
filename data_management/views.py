@@ -76,10 +76,25 @@ def get_search_meas(processes):
         forms.append(f)
     return forms
 
-#TODO
+# return http response of pictures
 @login_required
-def get_photo(request, chip_id):
-    p = get_object_or_404(Patterning, id=chip_id)
+def get_photo(request, chip_id, process):
+    if process == "Patterning":
+        p = get_object_or_404(Patterning, id=chip_id)
+    elif process == "AluminumEtch":
+        p = get_object_or_404(AluminumEtch, id=chip_id)
+    elif process == "AluminumEvaporation":
+        p = get_object_or_404(AluminumEvaporation, id=chip_id)
+    elif process == "Deposition":
+        p = get_object_or_404(Deposition, id=chip_id)
+    elif process == "OxideEtch":
+        p = get_object_or_404(OxideEtch, id=chip_id)
+    elif process == "PlasmaClean":
+        p = get_object_or_404(PlasmaClean, id=chip_id)
+    elif process == "PlasmaEtch":
+        p = get_object_or_404(PlasmaEtch, id=chip_id)
+    elif process == "Profile":
+        p = get_object_or_404(Profile, id=chip_id)
     # someone could have delete the picture leaving the DB with a bad references.
     if not p.picture:
         raise Http404
@@ -266,21 +281,21 @@ def filter_form(input_dict):
         for j in input_dict[proc]:
             query &= Q((j[0], j[1]))
         if proc == "ChipList":
-            q_obj = ChipList.objects.filter(query).order_by('creation_time')
+            q_obj = (proc, ChipList.objects.filter(query).order_by('creation_time'))
         if proc == "AluminumEtch":
-            q_obj = AluminumEtch.objects.filter(query).order_by('{0}_step_time'.format(proc))
+            q_obj = (proc, AluminumEtch.objects.filter(query).order_by('{0}_step_time'.format(proc)))
         if proc == "AluminumEvaporation":
-            q_obj = AluminumEvaporation.objects.filter(query).order_by('{0}_step_time'.format(proc))
+            q_obj = (proc, AluminumEvaporation.objects.filter(query).order_by('{0}_step_time'.format(proc)))
         if proc == "Deposition":
-            q_obj = Deposition.objects.filter(query).order_by('{0}_step_time'.format(proc))
+            q_obj = (proc, Deposition.objects.filter(query).order_by('{0}_step_time'.format(proc)))
         if proc == "OxideEtch":
-            q_obj = OxideEtch.objects.filter(query).order_by('{0}_step_time'.format(proc))
+            q_obj = (proc, OxideEtch.objects.filter(query).order_by('{0}_step_time'.format(proc)))
         if proc == "Patterning":
-            q_obj = Patterning.objects.filter(query).order_by('{0}_step_time'.format(proc))
+            q_obj = (proc, Patterning.objects.filter(query).order_by('{0}_step_time'.format(proc)))
         if proc == "PlasmaClean":
-            q_obj = PlasmaClean.objects.filter(query).order_by('{0}_step_time'.format(proc))
+            q_obj = (proc, PlasmaClean.objects.filter(query).order_by('{0}_step_time'.format(proc)))
         if proc == "PlasmaEtch":
-            q_obj = PlasmaEtch.objects.filter(query).order_by('{0}_step_time'.format(proc))
+            q_obj = (proc, PlasmaEtch.objects.filter(query).order_by('{0}_step_time'.format(proc)))
         q_list.append(q_obj)
     return q_list
 
@@ -289,10 +304,11 @@ def create_csv(query_list):
     _, _, files = next(os.walk("csvfiles"))
     file_count = len(files)+1
     for i in query_list:
+        queryset = i[1]
         with open(f'search{file_count}.csv', 'w') as file:
             write = csv.writer(file)
-            write.writerows(i.values())
-            write.writerows(i.values_list())
+            write.writerows(queryset.values())
+            write.writerows(queryset.values_list())
     return file_count
 
 # create http response output for csv so people can click it to download
@@ -415,7 +431,8 @@ def search_page(request):
     csv_link_id = create_csv(query_output)
     array_of_dicts = []
     for i in query_output:
-        for x in i.values():
+        for x in i[1].values():
+            x["process"] = i[0]
             array_of_dicts.append(x)
     processes = get_processes()
     context = {"message": "Data Searched!","processes": processes,"link_id":csv_link_id,"output":array_of_dicts}
