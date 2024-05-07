@@ -1,3 +1,8 @@
+## Contribute to the website
+NEVER push directly to main
+Create your own branch, push your branch, then merge with main:
+
+
 ## Run the code
 ### Run the code locally
 
